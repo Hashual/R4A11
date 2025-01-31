@@ -1,6 +1,9 @@
 package com.example.tp2
 
+import android.app.Notification.EXTRA_TEXT
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -59,7 +62,18 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.padding(innerPadding)
                             )
                             Button(
-                                onClick = { },
+                                onClick = {
+
+                                    if (text.isNotEmpty()) {
+                                        val intent = Intent(this@MainActivity, MainActivity2::class.java)
+                                        intent.putExtra(EXTRA_TEXT, text.toString())
+                                        startActivity(intent)                                    }
+                                    else {
+                                        Toast.makeText(this@MainActivity,"Texte vide", Toast.LENGTH_SHORT).show()
+                                    }
+
+
+                                },
                                 modifier = Modifier.padding(innerPadding)
                             ) {
                                 Text("Valider")
