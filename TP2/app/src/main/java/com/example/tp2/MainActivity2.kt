@@ -1,6 +1,5 @@
 package com.example.tp2
 
-import android.app.Notification.EXTRA_TEXT
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.tp2.ui.theme.TP2Theme
+import com.example.tp2.utilities.AgeCalculator
 
 class MainActivity2 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,18 +25,25 @@ class MainActivity2 : ComponentActivity() {
             TP2Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val intent = intent
-                    intent.getStringExtra(EXTRA_TEXT)
+                    val name = intent.getStringExtra(EXTRA_TEXT)
+                    if (!name.isNullOrBlank()) {
+                        val annee = intent.getIntExtra(BIRTH, 0)
+                        val age = AgeCalculator.calculateAge(annee)
 
-                    Column (
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Greeting2(
-                            name = intent.getStringExtra(EXTRA_TEXT).toString(),
-                            modifier = Modifier.padding(innerPadding)
-                        )
+                        Column (
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Greeting2(
+                                name = name,
+                                modifier = Modifier.padding(innerPadding),
+                                age = age
+                            )
+                        }
                     }
+
+
 
                 }
             }
@@ -45,9 +52,9 @@ class MainActivity2 : ComponentActivity() {
 }
 
 @Composable
-fun Greeting2(name: String, modifier: Modifier = Modifier) {
+fun Greeting2(name: String, modifier: Modifier = Modifier, age: Int) {
     Text(
-        text = "Hello $name !",
+        text = "Hello $name vous êtes né en $age",
         modifier = modifier
     )
 }
@@ -56,6 +63,5 @@ fun Greeting2(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview2() {
     TP2Theme {
-        Greeting2("Android")
     }
 }
