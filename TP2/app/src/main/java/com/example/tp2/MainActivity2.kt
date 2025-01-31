@@ -1,14 +1,18 @@
 package com.example.tp2
 
+import android.app.Notification.EXTRA_TEXT
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.tp2.ui.theme.TP2Theme
@@ -20,10 +24,20 @@ class MainActivity2 : ComponentActivity() {
         setContent {
             TP2Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting2(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    val intent = intent
+                    intent.getStringExtra(EXTRA_TEXT)
+
+                    Column (
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Greeting2(
+                            name = intent.getStringExtra(EXTRA_TEXT).toString(),
+                            modifier = Modifier.padding(innerPadding)
+                        )
+                    }
+
                 }
             }
         }
@@ -33,7 +47,7 @@ class MainActivity2 : ComponentActivity() {
 @Composable
 fun Greeting2(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Hello $name!",
+        text = "Hello $name !",
         modifier = modifier
     )
 }
