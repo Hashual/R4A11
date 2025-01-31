@@ -54,7 +54,7 @@ class MainActivity2 : ComponentActivity() {
 @Composable
 fun Greeting2(name: String, modifier: Modifier = Modifier, age: Int) {
     Text(
-        text = "Hello $name vous êtes né en $age",
+        text = "Hello $name vous avez $age ans",
         modifier = modifier
     )
 }
