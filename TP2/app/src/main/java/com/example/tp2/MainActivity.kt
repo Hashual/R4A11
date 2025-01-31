@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -54,35 +55,37 @@ class MainActivity : ComponentActivity() {
                             )
                             Spacer(modifier = Modifier.height(24.dp))
                             var text by remember { mutableStateOf("") }
-                            var birth by remember { mutableStateOf("") }
+                            var birth by remember { mutableIntStateOf(0) }
 
 
                             titleText(
                                 text = text,
                                 modifier = Modifier.padding(innerPadding),
                             )
-                            Spacer(modifier = Modifier.height(5.dp))
+                            Spacer(modifier = Modifier.height(0.dp))
                             TextField(
                                 value = text,
                                 onValueChange = { text=it },
                                 label = { Text("Saisir votre nom") },
                                 modifier = Modifier.padding(innerPadding)
                             )
+                            Spacer(modifier = Modifier.height(0.dp))
                             TextField(
-                                value = birth,
-                                onValueChange = { birth=it },
+                                value = birth.toString(),
+                                onValueChange = { birth=it.toIntOrNull()?:0 },
                                 label = { Text("Saisir votre année de naissance") },
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                 modifier = Modifier.padding(innerPadding)
 
                             )
+                            Spacer(modifier = Modifier.height(0.dp))
                             Button(
                                 onClick = {
 
                                     if (text.isNotEmpty()) {
                                         val intent = Intent(this@MainActivity, MainActivity2::class.java)
                                         intent.putExtra(EXTRA_TEXT, text.toString())
-                                        intent.putExtra(BIRTH, birth.toString())
+                                        intent.putExtra(BIRTH, birth)
                                         startActivity(intent)                                    }
                                     else {
                                         Toast.makeText(this@MainActivity,"Texte vide", Toast.LENGTH_SHORT).show()
