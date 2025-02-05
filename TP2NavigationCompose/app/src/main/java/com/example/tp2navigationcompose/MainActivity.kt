@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -29,6 +28,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.tp2navigationcompose.ui.theme.TP2NavigationComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -73,8 +73,12 @@ fun AppNavigation(){
         composable("form") {
             FormScreen(navController = navController)
         }
-        composable("valider") {
-            ValidateScreen(navController = navController)
+        composable(
+            "display/{name}",
+            arguments = listOf(navArgument("name") { defaultValue = ""})
+        ) {backStackEntry ->
+            val name = backStackEntry.arguments?.getString("name")?:""
+            DisplayScreen(navController,name)
         }
     }
 }
@@ -119,7 +123,7 @@ fun FormScreen(navController: NavController){
                 .fillMaxWidth()
                 .padding(16.dp)
         )
-        Button(onClick =  { navController.navigate("valider")} ){
+        Button(onClick =  { navController.navigate("display/$name")} ){
             Text(text = "Valider")
         }
         Button(onClick = { navController.popBackStack() }) {
@@ -131,7 +135,7 @@ fun FormScreen(navController: NavController){
 }
 
 @Composable
-fun ValidateScreen(navController: NavController){
+fun DisplayScreen(navController: NavController, name: String){
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -142,6 +146,10 @@ fun ValidateScreen(navController: NavController){
         Text(text = "Affichage du formulaire",
             style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(24.dp))
+        Text(
+            text = name,
+            style = MaterialTheme.typography.titleMedium
+        )
         Button(onClick = { navController.navigate("home") }) {
             Text(text = "Retour à l'accueil")
         }
