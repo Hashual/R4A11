@@ -73,6 +73,9 @@ fun AppNavigation(){
         composable("form") {
             FormScreen(navController = navController)
         }
+        composable("valider") {
+            ValidateScreen(navController = navController)
+        }
     }
 }
 
@@ -116,10 +119,31 @@ fun FormScreen(navController: NavController){
                 .fillMaxWidth()
                 .padding(16.dp)
         )
+        Button(onClick =  { navController.navigate("valider")} ){
+            Text(text = "Valider")
+        }
         Button(onClick = { navController.popBackStack() }) {
             Text(text = "Retour")
         }
 
 
+    }
+}
+
+@Composable
+fun ValidateScreen(navController: NavController){
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "Affichage du formulaire",
+            style = MaterialTheme.typography.titleMedium)
+        Spacer(modifier = Modifier.height(24.dp))
+        Button(onClick = { navController.navigate("home") }) {
+            Text(text = "Retour à l'accueil")
+        }
     }
 }
