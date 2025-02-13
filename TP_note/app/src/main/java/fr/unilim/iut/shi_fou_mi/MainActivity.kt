@@ -4,9 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,6 +45,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import fr.unilim.iut.shi_fou_mi.ui.theme.Shi_fou_miTheme
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,22 +94,18 @@ fun HomeScreen(navController: NavController) {
 
 @Composable
 fun PlayScreen(navController: NavController) {
-    var rotation by remember { mutableFloatStateOf(0f) }
+    val rotation = remember { Animatable(0f) }
+    val coroutineScope = rememberCoroutineScope()
+    val rightHandImage = remember { mutableStateOf(R.drawable.pierre_droit) }
+    val leftHandImage = remember { mutableStateOf(R.drawable.pierre_gauche) }
 
-    val animatedRotation by animateFloatAsState(
-        targetValue = rotation,
-        animationSpec = keyframes {
-            durationMillis = 1000
-            0f at 0
-            20f at 200
-            0f at 400
-            20f at 600
-            0f at 800
-            20f at 1000
-            0f at 1200
-        },
-        label = "rotationAnimation"
-    )
+    fun changeImage(left: Boolean, newImage: Int) {
+        if (left) {
+            leftHandImage.value = newImage
+        } else {
+            rightHandImage.value = newImage
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -119,22 +119,23 @@ fun PlayScreen(navController: NavController) {
             modifier = Modifier.matchParentSize()
         )
         Image(
-            painter = painterResource(id = R.drawable.pierre_gauche),
+            painter = painterResource(id = leftHandImage.value),
             contentDescription = "hand left player",
             modifier = Modifier
                 .size(250.dp)
+                .graphicsLayer(rotationZ = -rotation.value)
                 .align(Alignment.BottomStart)
-                .absoluteOffset(x = (-30).dp, y = (-230).dp)
+                .absoluteOffset(x = (-40).dp, y = (-230).dp)
         )
 
         Image(
-            painter = painterResource(id = R.drawable.pierre_droit),
+            painter = painterResource(id = rightHandImage.value),
             contentDescription = "hand right player",
             modifier = Modifier
                 .size(250.dp)
-                .rotate(animatedRotation)
+                .graphicsLayer(rotationZ = rotation.value)
                 .align(Alignment.BottomEnd)
-                .absoluteOffset(x = (30).dp, y = (-230).dp)
+                .absoluteOffset(x = (40).dp, y = (-230).dp)
         )
         Column(
             modifier = Modifier
@@ -151,8 +152,16 @@ fun PlayScreen(navController: NavController) {
                 Text(text = "Retour")
             }
             Button(onClick = {
-                // Réinitialise la rotation à 0, ce qui déclenche l'animation
-                rotation = 0.0001f
+                coroutineScope.launch {
+                    repeat(5) {  // Nombre de secousses
+                        rotation.animateTo(0f, animationSpec = tween(100))
+                    rotation.animateTo(10f, animationSpec = tween(100))
+                    }
+                    rotation.animateTo(0f, animationSpec = tween(100))
+                    changeImage(true, R.drawable.ciseaux_gauche)
+                    changeImage(false, R.drawable.feuille_droit)// Retour à l'état normal
+                }
+
             }) {
                 Text(text = "Animer")
             }
