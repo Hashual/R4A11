@@ -20,7 +20,7 @@ import fr.unilim.iut.shi_fou_mi.ui.theme.Shi_fou_miTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MainActivity : ComponentActivity() {
+class MainActivity2 : ComponentActivity() {
 
     // Variable d'état pour afficher le message dans Compose.
     private var messageVisible = mutableStateOf(false)
