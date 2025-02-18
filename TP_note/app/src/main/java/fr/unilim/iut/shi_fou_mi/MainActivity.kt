@@ -5,9 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -17,23 +14,17 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -44,8 +35,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import fr.unilim.iut.shi_fou_mi.ui.theme.Shi_fou_miTheme
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,7 +79,6 @@ fun HomeScreen(navController: NavController) {
         Button(onClick = { navController.navigate("play") }) {
             Text(text = "Jouer")
         }
-
     }
 }
 
@@ -96,14 +86,32 @@ fun HomeScreen(navController: NavController) {
 fun PlayScreen(navController: NavController) {
     val rotation = remember { Animatable(0f) }
     val coroutineScope = rememberCoroutineScope()
-    val rightHandImage = remember { mutableStateOf(R.drawable.pierre_droit) }
-    val leftHandImage = remember { mutableStateOf(R.drawable.pierre_gauche) }
+    val rightSymbols = listOf(R.drawable.rock_right, R.drawable.paper_right, R.drawable.cisors_right)
+    val leftSymbols = listOf(R.drawable.rock_left, R.drawable.paper_left, R.drawable.cisors_left)
+    val rightHandImage = remember { mutableIntStateOf(rightSymbols[0]) }
+    val leftHandImage = remember { mutableIntStateOf(leftSymbols[0]) }
 
-    fun changeImage(left: Boolean, newImage: Int) {
-        if (left) {
-            leftHandImage.value = newImage
-        } else {
-            rightHandImage.value = newImage
+    fun changeLeftHandImage(newImage: Int) {
+        leftHandImage.value = newImage
+    }
+
+    fun changeRightHandImage(newImage: Int) {
+        rightHandImage.value = newImage
+    }
+
+    fun getRandomIndex(): Int {
+        return Random.nextInt(0, 3)
+    }
+
+    fun launchRound() {
+        coroutineScope.launch {
+            repeat(3) {
+                rotation.animateTo(0f, animationSpec = tween(100))
+                rotation.animateTo(10f, animationSpec = tween(100))
+            }
+            rotation.animateTo(0f, animationSpec = tween(100))
+            changeLeftHandImage(leftSymbols[getRandomIndex()])
+            changeRightHandImage(rightSymbols[getRandomIndex()])
         }
     }
 
@@ -151,18 +159,7 @@ fun PlayScreen(navController: NavController) {
             Button(onClick = { navController.popBackStack() }) {
                 Text(text = "Retour")
             }
-            Button(onClick = {
-                coroutineScope.launch {
-                    repeat(5) {  // Nombre de secousses
-                        rotation.animateTo(0f, animationSpec = tween(100))
-                    rotation.animateTo(10f, animationSpec = tween(100))
-                    }
-                    rotation.animateTo(0f, animationSpec = tween(100))
-                    changeImage(true, R.drawable.ciseaux_gauche)
-                    changeImage(false, R.drawable.feuille_droit)// Retour à l'état normal
-                }
-
-            }) {
+            Button(onClick = { launchRound() }) {
                 Text(text = "Animer")
             }
         }
