@@ -8,6 +8,7 @@
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\mixtr\.android\avd\Medium_Phone.avd" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=a535b6f0" />
             </handle>
           </Target>
         </DropdownSelection>
