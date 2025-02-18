@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
@@ -27,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -73,8 +76,10 @@ fun HomeScreen(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Bienvenue dans le Shake-Fou-Mi",
-            style = MaterialTheme.typography.titleMedium)
+        Text(
+            text = "Bienvenue dans le Shake-Fou-Mi",
+            style = MaterialTheme.typography.titleMedium
+        )
         Spacer(modifier = Modifier.height(24.dp))
         Button(onClick = { navController.navigate("play") }) {
             Text(text = "Jouer")
@@ -84,8 +89,14 @@ fun HomeScreen(navController: NavController) {
 
 @Composable
 fun PlayScreen(navController: NavController) {
+    // Contexte pour instancier le gyroscope.
+    val context = LocalContext.current
+
+    // Animation de rotation pour l'animation des images.
     val rotation = remember { Animatable(0f) }
     val coroutineScope = rememberCoroutineScope()
+
+    // Listes d'images pour les symboles.
     val rightSymbols = listOf(R.drawable.rock_right, R.drawable.paper_right, R.drawable.cisors_right)
     val leftSymbols = listOf(R.drawable.rock_left, R.drawable.paper_left, R.drawable.cisors_left)
     val rightHandImage = remember { mutableIntStateOf(rightSymbols[0]) }
@@ -99,10 +110,9 @@ fun PlayScreen(navController: NavController) {
         rightHandImage.value = newImage
     }
 
-    fun getRandomIndex(): Int {
-        return Random.nextInt(0, 3)
-    }
+    fun getRandomIndex(): Int = Random.nextInt(0, 3)
 
+    // Fonction qui lance l'animation et change les images aléatoirement.
     fun launchRound() {
         coroutineScope.launch {
             repeat(3) {
@@ -115,11 +125,22 @@ fun PlayScreen(navController: NavController) {
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        // Image en arrière-plan
+    // Création et démarrage du gyroscope qui déclenche launchRound() lors de 3 mouvements détectés.
+    val gyroscope = remember {
+        Gyroscope(context) {
+            // Lorsque 3 mouvements sont détectés, lancer l'animation.
+            launchRound()
+        }
+    }
+
+    // Démarrage et arrêt automatique du gyroscope.
+    androidx.compose.runtime.DisposableEffect(Unit) {
+        gyroscope.start()
+        onDispose { gyroscope.stop() }
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        // Image d'arrière-plan.
         Image(
             painter = painterResource(id = R.drawable.background_game),
             contentDescription = "background",
@@ -135,7 +156,6 @@ fun PlayScreen(navController: NavController) {
                 .align(Alignment.BottomStart)
                 .absoluteOffset(x = (-40).dp, y = (-230).dp)
         )
-
         Image(
             painter = painterResource(id = rightHandImage.value),
             contentDescription = "hand right player",
@@ -159,6 +179,7 @@ fun PlayScreen(navController: NavController) {
             Button(onClick = { navController.popBackStack() }) {
                 Text(text = "Retour")
             }
+            // Bouton "Animer" pour lancer manuellement l'animation.
             Button(onClick = { launchRound() }) {
                 Text(text = "Animer")
             }
