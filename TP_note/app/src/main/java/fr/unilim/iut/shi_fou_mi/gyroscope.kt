@@ -24,31 +24,24 @@ class Gyroscope(
         context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private var gyroscopeSensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
 
-    // Constante pour convertir des nanosecondes en secondes.
     private val NS2S = 1.0f / 1_000_000_000.0f
     private val deltaRotationVector = FloatArray(4) { 0f }
     private var timestamp: Long = 0L
 
-    // Seuil pour éviter la division par zéro lors de la normalisation.
     private val EPSILON = 0.0000001f
 
-    // Seuil pour détecter un mouvement vers le bas (rotation autour de l'axe X)
     private val downwardThreshold = 1.0f
 
-    // Variables pour compter les mouvements vers le bas et gérer un cooldown.
     private var downwardMovementCount = 0
     private var lastMovementTimestamp: Long = 0L
-    // Cooldown en nanosecondes (ici 1 seconde)
     private val movementCooldown = 1_000_000_000L
 
-    /** Démarre l'écoute du gyroscope. */
     fun start() {
         gyroscopeSensor?.also { sensor ->
             sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME)
         }
     }
 
-    /** Arrête l'écoute du gyroscope. */
     fun stop() {
         sensorManager.unregisterListener(this)
     }
@@ -56,7 +49,6 @@ class Gyroscope(
     override fun onSensorChanged(event: SensorEvent?) {
         event ?: return
 
-        // Calcul de la rotation si ce n'est pas le premier événement.
         if (timestamp != 0L) {
             val dT = (event.timestamp - timestamp) * NS2S
 
@@ -80,13 +72,9 @@ class Gyroscope(
             deltaRotationVector[2] = sinThetaOverTwo * axisZ
             deltaRotationVector[3] = cosThetaOverTwo
 
-            // Si nécessaire, on peut convertir le quaternion en matrice de rotation :
-            // val deltaRotationMatrix = FloatArray(9)
-            // SensorManager.getRotationMatrixFromVector(deltaRotationMatrix, deltaRotationVector)
         }
         timestamp = event.timestamp
 
-        // Détection d'un mouvement vers le bas (rotation autour de l'axe X)
         if (event.values[0] > downwardThreshold &&
             (event.timestamp - lastMovementTimestamp) > movementCooldown
         ) {
@@ -95,7 +83,6 @@ class Gyroscope(
 
             if (downwardMovementCount >= 3) {
                 downwardMovementCount = 0
-                // On déclenche le callback lorsque 3 mouvements sont détectés.
                 onThreeDownwardMovements()
             }
         }
