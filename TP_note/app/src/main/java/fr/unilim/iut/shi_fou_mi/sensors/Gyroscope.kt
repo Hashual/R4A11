@@ -1,4 +1,4 @@
-package fr.unilim.iut.shi_fou_mi
+package fr.unilim.iut.shi_fou_mi.sensors
 
 import android.content.Context
 import android.hardware.Sensor
