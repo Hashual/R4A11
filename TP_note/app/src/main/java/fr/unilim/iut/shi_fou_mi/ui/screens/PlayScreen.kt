@@ -31,6 +31,7 @@ import fr.unilim.iut.shi_fou_mi.R
 import fr.unilim.iut.shi_fou_mi.logic.GameMode
 import fr.unilim.iut.shi_fou_mi.logic.GameLogic
 import fr.unilim.iut.shi_fou_mi.logic.games.ClassicGameLogic
+import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
 import kotlinx.coroutines.launch
 
 @Composable
@@ -103,13 +104,22 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
-            Button(onClick = { navController.popBackStack() }) {
-                Text(text = "Retour")
-            }
-            Button(onClick = { launchRound() }) {
-                Text(text = "Jouer")
-            }
+            Spacer(modifier = Modifier.height(32.dp))
+            CustomButton(
+                onClick = { navController.popBackStack() },
+                text = "RETOUR",
+                padV = 10,
+                width = 100,
+                textSize = 14
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            CustomButton(
+                onClick = { launchRound() },
+                text = "JOUER",
+                padV = 10,
+                width = 100,
+                textSize = 14
+            )
         }
     }
 }
