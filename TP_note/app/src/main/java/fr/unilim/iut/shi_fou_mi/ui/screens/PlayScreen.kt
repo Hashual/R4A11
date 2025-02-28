@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +34,7 @@ import fr.unilim.iut.shi_fou_mi.logic.GameMode
 import fr.unilim.iut.shi_fou_mi.logic.GameLogic
 import fr.unilim.iut.shi_fou_mi.logic.games.ClassicGameLogic
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
+import fr.unilim.iut.shi_fou_mi.ui.components.TextBox
 import kotlinx.coroutines.launch
 
 @Composable
@@ -88,6 +91,34 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
                 .align(Alignment.BottomStart)
                 .absoluteOffset(x = (-40).dp, y = (-230).dp)
         )
+        Image(
+            painter = painterResource(id = rightHandImage.intValue),
+            contentDescription = "hand right player",
+            modifier = Modifier
+                .size(250.dp)
+                .graphicsLayer(rotationZ = rotation.value)
+                .align(Alignment.BottomEnd)
+                .absoluteOffset(x = (40).dp, y = (-230).dp)
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize(align = Alignment.BottomStart)
+                .absoluteOffset(x = 25.dp, y= (-210).dp)
+        ) {
+            TextBox("J1", 50)
+        }
+
+        // "O" à 70% en hauteur et proche du bord droit
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize(align = Alignment.BottomEnd)
+                .absoluteOffset(x = (-20).dp, y= (-210).dp)
+        ) {
+            TextBox("\uD83E\uDD16", 50)
+        }
 
         Column(
             modifier = Modifier
