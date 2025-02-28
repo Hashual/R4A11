@@ -88,15 +88,7 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
                 .align(Alignment.BottomStart)
                 .absoluteOffset(x = (-40).dp, y = (-230).dp)
         )
-        Image(
-            painter = painterResource(id = rightHandImage.intValue),
-            contentDescription = "hand right player",
-            modifier = Modifier
-                .size(250.dp)
-                .graphicsLayer(rotationZ = rotation.value)
-                .align(Alignment.BottomEnd)
-                .absoluteOffset(x = (40).dp, y = (-230).dp)
-        )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
