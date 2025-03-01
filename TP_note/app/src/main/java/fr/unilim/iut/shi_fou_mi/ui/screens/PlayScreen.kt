@@ -14,26 +14,30 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import fr.unilim.iut.shi_fou_mi.sensors.Gyroscope
 import fr.unilim.iut.shi_fou_mi.R
-import fr.unilim.iut.shi_fou_mi.logic.GameMode
 import fr.unilim.iut.shi_fou_mi.logic.GameLogic
+import fr.unilim.iut.shi_fou_mi.logic.GameMode
+import fr.unilim.iut.shi_fou_mi.logic.Weapon
 import fr.unilim.iut.shi_fou_mi.logic.games.ClassicGameLogic
+import fr.unilim.iut.shi_fou_mi.logic.weapons.Rock
+import fr.unilim.iut.shi_fou_mi.sensors.Gyroscope
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
+import fr.unilim.iut.shi_fou_mi.ui.components.CustomText
 import fr.unilim.iut.shi_fou_mi.ui.components.TextBox
 import kotlinx.coroutines.launch
 
@@ -44,8 +48,10 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
     val rotation = remember { Animatable(0f) }
     val coroutineScope = rememberCoroutineScope()
 
-    val rightHandImage = remember { mutableIntStateOf(R.drawable.rock_right) }
-    val leftHandImage = remember { mutableIntStateOf(R.drawable.rock_left) }
+    val leftHandWeapon = remember { mutableStateOf<Weapon>(Rock()) }
+    val rightHandWeapon = remember { mutableStateOf<Weapon>(Rock()) }
+
+    val scoreText = remember { mutableStateOf("") }
 
     val gameLogic: GameLogic = remember(mode) {
         when (mode) {
@@ -53,14 +59,28 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
         }
     }
 
+    fun updateScoreText() {
+        if (leftHandWeapon.value.fightAgainst(rightHandWeapon.value) == 1) {
+            scoreText.value = "Le joueur gagne !"
+        } else if (leftHandWeapon.value.fightAgainst(rightHandWeapon.value) == -1) {
+            scoreText.value = "Le robot gagne !"
+        } else {
+            scoreText.value = "Match nul"
+        }
+    }
+
     fun launchRound() {
+        scoreText.value = ""
         coroutineScope.launch {
             repeat(3) {
                 rotation.animateTo(0f, animationSpec = tween(100))
                 rotation.animateTo(10f, animationSpec = tween(100))
             }
             rotation.animateTo(0f, animationSpec = tween(100))
-            gameLogic.launchRound(leftHandImage, rightHandImage)
+            val (leftWeapon, rightWeapon) = gameLogic.launchRound()
+            leftHandWeapon.value = leftWeapon
+            rightHandWeapon.value = rightWeapon
+            updateScoreText()
         }
     }
 
@@ -83,7 +103,7 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
             modifier = Modifier.matchParentSize()
         )
         Image(
-            painter = painterResource(id = leftHandImage.intValue),
+            painter = painterResource(id = leftHandWeapon.value.getDrawableResource(true)),
             contentDescription = "hand left player",
             modifier = Modifier
                 .size(250.dp)
@@ -92,7 +112,7 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
                 .absoluteOffset(x = (-40).dp, y = (-230).dp)
         )
         Image(
-            painter = painterResource(id = rightHandImage.intValue),
+            painter = painterResource(id = rightHandWeapon.value.getDrawableResource(false)),
             contentDescription = "hand right player",
             modifier = Modifier
                 .size(250.dp)
@@ -119,6 +139,16 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
         ) {
             TextBox("\uD83E\uDD16", 50)
         }
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize(align = Alignment.TopCenter)
+                .absoluteOffset(y = (0.20f * LocalConfiguration.current.screenHeightDp).dp)
+        ) {
+            CustomText(scoreText.value, 35.sp, TextAlign.Center)
+        }
+
 
         Column(
             modifier = Modifier
