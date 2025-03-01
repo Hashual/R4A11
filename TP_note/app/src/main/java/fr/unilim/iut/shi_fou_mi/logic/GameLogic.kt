@@ -7,9 +7,9 @@ abstract class GameLogic() {
     protected val rightSymbols = listOf(R.drawable.rock_right, R.drawable.paper_right, R.drawable.cisors_right)
     protected val leftSymbols = listOf(R.drawable.rock_left, R.drawable.paper_left, R.drawable.cisors_left)
 
-    fun launchRound(leftHandImage: MutableIntState, rightHandImage: MutableIntState) {
-        applyGameLogic(leftHandImage, rightHandImage)
+    fun launchRound() : Pair<Weapon, Weapon> {
+        return applyGameLogic()
     }
 
-    protected abstract fun applyGameLogic(leftHandImage: MutableIntState, rightHandImage: MutableIntState)
+    protected abstract fun applyGameLogic() : Pair<Weapon, Weapon>
 }
