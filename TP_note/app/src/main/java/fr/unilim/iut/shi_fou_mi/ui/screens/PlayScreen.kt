@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,9 +21,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import fr.unilim.iut.shi_fou_mi.R
 import fr.unilim.iut.shi_fou_mi.logic.GameLogic
@@ -32,6 +36,8 @@ import fr.unilim.iut.shi_fou_mi.logic.games.ClassicGameLogic
 import fr.unilim.iut.shi_fou_mi.logic.weapons.Rock
 import fr.unilim.iut.shi_fou_mi.sensors.Gyroscope
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
+import fr.unilim.iut.shi_fou_mi.ui.components.CustomText
+import fr.unilim.iut.shi_fou_mi.ui.components.TextBox
 import kotlinx.coroutines.launch
 
 @Composable
@@ -44,13 +50,26 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
     val leftHandWeapon = remember { mutableStateOf<Weapon>(Rock()) }
     val rightHandWeapon = remember { mutableStateOf<Weapon>(Rock()) }
 
+    val scoreText = remember { mutableStateOf("") }
+
     val gameLogic: GameLogic = remember(mode) {
         when (mode) {
             GameMode.CLASSIC -> ClassicGameLogic()
         }
     }
 
+    fun updateScoreText() {
+        if (leftHandWeapon.value.fightAgainst(rightHandWeapon.value) == 1) {
+            scoreText.value = "Le joueur gagne !"
+        } else if (leftHandWeapon.value.fightAgainst(rightHandWeapon.value) == -1) {
+            scoreText.value = "Le robot gagne !"
+        } else {
+            scoreText.value = "Match nul"
+        }
+    }
+
     fun launchRound() {
+        scoreText.value = ""
         coroutineScope.launch {
             repeat(3) {
                 rotation.animateTo(0f, animationSpec = tween(100))
@@ -60,6 +79,7 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
             val (leftWeapon, rightWeapon) = gameLogic.launchRound()
             leftHandWeapon.value = leftWeapon
             rightHandWeapon.value = rightWeapon
+            updateScoreText()
         }
     }
 
@@ -99,6 +119,35 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
                 .align(Alignment.BottomEnd)
                 .absoluteOffset(x = (40).dp, y = (-230).dp)
         )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize(align = Alignment.BottomStart)
+                .absoluteOffset(x = 25.dp, y= (-210).dp)
+        ) {
+            TextBox("J1", 50)
+        }
+
+        // "O" à 70% en hauteur et proche du bord droit
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize(align = Alignment.BottomEnd)
+                .absoluteOffset(x = (-20).dp, y= (-210).dp)
+        ) {
+            TextBox("\uD83E\uDD16", 50)
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize(align = Alignment.TopCenter)
+                .absoluteOffset(y = (0.20f * LocalConfiguration.current.screenHeightDp).dp)
+        ) {
+            CustomText(scoreText.value, 35.sp, TextAlign.Center)
+        }
+
 
         Column(
             modifier = Modifier
