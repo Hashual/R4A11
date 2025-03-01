@@ -24,10 +24,12 @@ class Gyroscope(
         context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private var gyroscopeSensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
 
+    @Suppress("PrivatePropertyName")
     private val NS2S = 1.0f / 1_000_000_000.0f
     private val deltaRotationVector = FloatArray(4) { 0f }
     private var timestamp: Long = 0L
 
+    @Suppress("PrivatePropertyName")
     private val EPSILON = 0.0000001f
 
     private val downwardThreshold = 1.0f
