@@ -13,13 +13,13 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import fr.unilim.iut.shi_fou_mi.logic.strategies.Strategies
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomText
 import fr.unilim.iut.shi_fou_mi.ui.components.Screen
 
 @Composable
-fun ComputerStrategySelectionScreen(navController: NavController) {
+fun ComputerStrategySelectionScreen(playerName: String, opponent: String, gameMode: String, playerStrategy: String, onComputerStrategySelected: (String) -> Unit) {
     Screen {
         Column(
             modifier = Modifier
@@ -37,7 +37,7 @@ fun ComputerStrategySelectionScreen(navController: NavController) {
                 .offset(y = (LocalConfiguration.current.screenHeightDp * 0.4).dp)
         ) {
             CustomButton(
-                onClick = { navController.navigate("play") },
+                onClick = { onComputerStrategySelected(Strategies.HUMAN.toString()) },
                 text = "HUMAINE",
                 padV = 16,
                 width = 200,
@@ -45,7 +45,7 @@ fun ComputerStrategySelectionScreen(navController: NavController) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             CustomButton(
-                onClick = { navController.navigate("play") },
+                onClick = { onComputerStrategySelected(Strategies.COMPUTER.toString()) },
                 text = "MACHINE",
                 padV = 16,
                 width = 200,
@@ -53,7 +53,7 @@ fun ComputerStrategySelectionScreen(navController: NavController) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             CustomButton(
-                onClick = { navController.navigate("play") },
+                onClick = { onComputerStrategySelected(Strategies.ADAPTIVE.toString()) },
                 text = "ADAPTATIVE",
                 padV = 16,
                 width = 200,

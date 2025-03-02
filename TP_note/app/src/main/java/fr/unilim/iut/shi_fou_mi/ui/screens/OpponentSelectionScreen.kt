@@ -14,12 +14,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import fr.unilim.iut.shi_fou_mi.logic.Opponents
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomText
 import fr.unilim.iut.shi_fou_mi.ui.components.Screen
 
 @Composable
-fun OpponentSelectionScreen(navController: NavController) {
+fun OpponentSelectionScreen(playerName: String, onOpponentSelected: (String) -> Unit) {
     Screen {
         Column(
             modifier = Modifier
@@ -34,23 +35,23 @@ fun OpponentSelectionScreen(navController: NavController) {
         Column(
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .offset(y = (LocalConfiguration.current.screenHeightDp * 0.485).dp)
+                .offset(y = (LocalConfiguration.current.screenHeightDp * 0.6).dp)
         ) {
             CustomButton(
-                onClick = { navController.navigate("gamemode") },
+                onClick = { onOpponentSelected(Opponents.COMPUTER.toString()) },
                 text = "ORDINATEUR",
                 padV = 16,
                 width = 200,
                 textSize = 24
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            CustomButton(
-                onClick = { navController.navigate("gamemode") },
-                text = "JOUEUR",
-                padV = 16,
-                width = 200,
-                textSize = 24
-            )
+//            Spacer(modifier = Modifier.height(16.dp))
+//            CustomButton(
+//                onClick = { onOpponentSelected(Opponents.PLAYER.toString()) },
+//                text = "JOUEUR",
+//                padV = 16,
+//                width = 200,
+//                textSize = 24
+//            )
         }
     }
 }

@@ -14,12 +14,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import fr.unilim.iut.shi_fou_mi.logic.games.GamesLogic
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomText
 import fr.unilim.iut.shi_fou_mi.ui.components.Screen
 
 @Composable
-fun GameModeSelectionScreen(navController: NavController) {
+fun GameModeSelectionScreen(playerName: String, opponent: String, onGameModeSelected: (String) -> Unit) {
     Screen {
         Column(
             modifier = Modifier
@@ -37,7 +38,7 @@ fun GameModeSelectionScreen(navController: NavController) {
                 .offset(y = (LocalConfiguration.current.screenHeightDp * 0.485).dp)
         ) {
             CustomButton(
-                onClick = { navController.navigate("play") },
+                onClick = { onGameModeSelected(GamesLogic.CLASSIC.toString()) },
                 text = "CLASSIQUE",
                 padV = 16,
                 width = 200,
@@ -45,7 +46,7 @@ fun GameModeSelectionScreen(navController: NavController) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             CustomButton(
-                onClick = { navController.navigate("playerstrategy") },
+                onClick = { onGameModeSelected(GamesLogic.STRATEGIC.toString()) },
                 text = "STRATEGIQUE",
                 padV = 16,
                 width = 200,
