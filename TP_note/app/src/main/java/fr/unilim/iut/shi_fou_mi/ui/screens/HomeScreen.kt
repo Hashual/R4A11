@@ -1,6 +1,5 @@
 package fr.unilim.iut.shi_fou_mi.ui.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,9 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -23,6 +20,7 @@ import androidx.navigation.NavController
 import fr.unilim.iut.shi_fou_mi.R
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
 import fr.unilim.iut.shi_fou_mi.ui.components.MainTitle
+import fr.unilim.iut.shi_fou_mi.ui.components.Screen
 
 val titleFont = FontFamily(
     Font(R.font.musashi, FontWeight.Normal, FontStyle.Normal),
@@ -30,13 +28,7 @@ val titleFont = FontFamily(
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.background_game),
-            contentDescription = "background",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.matchParentSize()
-        )
+    Screen {
         Column(
             modifier = Modifier
                 .fillMaxSize()
