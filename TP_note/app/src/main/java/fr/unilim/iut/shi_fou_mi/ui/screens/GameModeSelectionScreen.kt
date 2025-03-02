@@ -1,6 +1,5 @@
 package fr.unilim.iut.shi_fou_mi.ui.screens
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,23 +10,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import fr.unilim.iut.shi_fou_mi.R
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
-import fr.unilim.iut.shi_fou_mi.ui.components.MainTitle
+import fr.unilim.iut.shi_fou_mi.ui.components.CustomText
 import fr.unilim.iut.shi_fou_mi.ui.components.Screen
 
-val titleFont = FontFamily(
-    Font(R.font.musashi, FontWeight.Normal, FontStyle.Normal),
-)
-
 @Composable
-fun HomeScreen(navController: NavController) {
+fun GameModeSelectionScreen(navController: NavController) {
     Screen {
         Column(
             modifier = Modifier
@@ -36,25 +28,29 @@ fun HomeScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(80.dp))
-            MainTitle()
+            CustomText("Choisissez le mode", 35.sp, TextAlign.Center)
         }
 
-        Box(
+        Column(
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .offset(y = (LocalConfiguration.current.screenHeightDp * 0.6).dp)
+                .offset(y = (LocalConfiguration.current.screenHeightDp * 0.485).dp)
         ) {
             CustomButton(
-                onClick = { navController.navigate("opponent") },
-                text = "JOUER",
+                onClick = { navController.navigate("play") },
+                text = "CLASSIQUE",
                 padV = 16,
-                padH = 32,
+                width = 200,
+                textSize = 24
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            CustomButton(
+                onClick = { navController.navigate("playerstrategy") },
+                text = "STRATEGIQUE",
+                padV = 16,
+                width = 200,
                 textSize = 24
             )
         }
     }
 }
-
-
-
-
