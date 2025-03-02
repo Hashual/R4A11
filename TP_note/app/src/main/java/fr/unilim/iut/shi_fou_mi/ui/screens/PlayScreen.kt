@@ -151,7 +151,7 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
         ) {
             Spacer(modifier = Modifier.height(32.dp))
             CustomButton(
-                onClick = { navController.popBackStack() },
+                onClick = { navController.navigate("home") },
                 text = "RETOUR",
                 padV = 10,
                 width = 100,
