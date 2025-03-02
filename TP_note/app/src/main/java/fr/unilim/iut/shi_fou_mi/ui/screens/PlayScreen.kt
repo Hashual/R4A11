@@ -20,7 +20,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -28,7 +27,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import fr.unilim.iut.shi_fou_mi.R
 import fr.unilim.iut.shi_fou_mi.logic.GameLogic
 import fr.unilim.iut.shi_fou_mi.logic.GameMode
 import fr.unilim.iut.shi_fou_mi.logic.Weapon
@@ -37,6 +35,7 @@ import fr.unilim.iut.shi_fou_mi.logic.weapons.Rock
 import fr.unilim.iut.shi_fou_mi.sensors.Gyroscope
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomText
+import fr.unilim.iut.shi_fou_mi.ui.components.Screen
 import fr.unilim.iut.shi_fou_mi.ui.components.TextBox
 import kotlinx.coroutines.launch
 
@@ -94,13 +93,7 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
         onDispose { gyroscope.stop() }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.background_game),
-            contentDescription = "background",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.matchParentSize()
-        )
+    Screen {
         Image(
             painter = painterResource(id = leftHandWeapon.value.getDrawableResource(true)),
             contentDescription = "hand left player",
@@ -108,7 +101,7 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
                 .size(250.dp)
                 .graphicsLayer(rotationZ = -rotation.value)
                 .align(Alignment.BottomStart)
-                .absoluteOffset(x = (-40).dp, y = (-230).dp)
+                .absoluteOffset(x = (-40).dp, y = (-230).dp) ,
         )
         Image(
             painter = painterResource(id = rightHandWeapon.value.getDrawableResource(false)),
