@@ -16,7 +16,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import fr.unilim.iut.shi_fou_mi.R
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
 import fr.unilim.iut.shi_fou_mi.ui.components.MainTitle
@@ -27,7 +26,7 @@ val titleFont = FontFamily(
 )
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(onPlayerNameEntered: (String) -> Unit) {
     Screen {
         Column(
             modifier = Modifier
@@ -45,7 +44,7 @@ fun HomeScreen(navController: NavController) {
                 .offset(y = (LocalConfiguration.current.screenHeightDp * 0.6).dp)
         ) {
             CustomButton(
-                onClick = { navController.navigate("opponent") },
+                onClick = { onPlayerNameEntered("JTest") },
                 text = "JOUER",
                 padV = 16,
                 padH = 32,
@@ -54,6 +53,8 @@ fun HomeScreen(navController: NavController) {
         }
     }
 }
+
+//TODO() : faire choisir son pseudo au joueur max 7 lettres et faire aussi le read me analyse strat
 
 
 

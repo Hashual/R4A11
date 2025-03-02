@@ -14,12 +14,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import fr.unilim.iut.shi_fou_mi.logic.strategies.Strategies
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomText
 import fr.unilim.iut.shi_fou_mi.ui.components.Screen
 
 @Composable
-fun PlayerStrategySelectionScreen(navController: NavController) {
+fun PlayerStrategySelectionScreen(playerName: String, opponent: String, gameMode: String, onPlayerStrategySelected: (String) -> Unit) {
     Screen {
         Column(
             modifier = Modifier
@@ -37,7 +38,7 @@ fun PlayerStrategySelectionScreen(navController: NavController) {
                 .offset(y = (LocalConfiguration.current.screenHeightDp * 0.4).dp)
         ) {
             CustomButton(
-                onClick = { navController.navigate("computerstrategy") },
+                onClick = { onPlayerStrategySelected(Strategies.HUMAN.toString()) },
                 text = "HUMAINE",
                 padV = 16,
                 width = 200,
@@ -45,7 +46,7 @@ fun PlayerStrategySelectionScreen(navController: NavController) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             CustomButton(
-                onClick = { navController.navigate("computerstrategy") },
+                onClick = { onPlayerStrategySelected(Strategies.COMPUTER.toString()) },
                 text = "MACHINE",
                 padV = 16,
                 width = 200,
@@ -53,7 +54,7 @@ fun PlayerStrategySelectionScreen(navController: NavController) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             CustomButton(
-                onClick = { navController.navigate("computerstrategy") },
+                onClick = { onPlayerStrategySelected(Strategies.ADAPTIVE.toString()) },
                 text = "ADAPTATIVE",
                 padV = 16,
                 width = 200,

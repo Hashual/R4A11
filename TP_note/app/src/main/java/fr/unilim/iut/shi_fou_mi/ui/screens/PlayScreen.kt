@@ -28,9 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import fr.unilim.iut.shi_fou_mi.logic.GameLogic
-import fr.unilim.iut.shi_fou_mi.logic.GameMode
+import fr.unilim.iut.shi_fou_mi.logic.Player
+import fr.unilim.iut.shi_fou_mi.logic.Strategy
 import fr.unilim.iut.shi_fou_mi.logic.Weapon
-import fr.unilim.iut.shi_fou_mi.logic.games.ClassicGameLogic
 import fr.unilim.iut.shi_fou_mi.logic.weapons.Rock
 import fr.unilim.iut.shi_fou_mi.sensors.Gyroscope
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
@@ -40,7 +40,13 @@ import fr.unilim.iut.shi_fou_mi.ui.components.TextBox
 import kotlinx.coroutines.launch
 
 @Composable
-fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) {
+fun PlayScreen(
+    navController: NavController,
+    gameLogic: GameLogic,
+    player: Player,
+    playerStrategy: Strategy? = null,
+    computerStrategy: Strategy? = null
+) {
     val context = LocalContext.current
 
     val rotation = remember { Animatable(0f) }
@@ -49,19 +55,18 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
     val leftHandWeapon = remember { mutableStateOf<Weapon>(Rock()) }
     val rightHandWeapon = remember { mutableStateOf<Weapon>(Rock()) }
 
-    val scoreText = remember { mutableStateOf("") }
+    val playerHistory = mutableListOf<Weapon>()
+    val computerHistory = mutableListOf<Weapon>()
 
-    val gameLogic: GameLogic = remember(mode) {
-        when (mode) {
-            GameMode.CLASSIC -> ClassicGameLogic()
-        }
-    }
+
+    val scoreText = remember { mutableStateOf("") }
 
     fun updateScoreText() {
         if (leftHandWeapon.value.fightAgainst(rightHandWeapon.value) == 1) {
-            scoreText.value = "Le joueur gagne !"
+            player.incrementScore()
+            scoreText.value = " ${player.name} gagne !"
         } else if (leftHandWeapon.value.fightAgainst(rightHandWeapon.value) == -1) {
-            scoreText.value = "Le robot gagne !"
+            scoreText.value = "L'ordinateur gagne !"
         } else {
             scoreText.value = "Match nul"
         }
@@ -75,9 +80,11 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
                 rotation.animateTo(10f, animationSpec = tween(100))
             }
             rotation.animateTo(0f, animationSpec = tween(100))
-            val (leftWeapon, rightWeapon) = gameLogic.launchRound()
+            val (leftWeapon, rightWeapon) = gameLogic.launchRound(playerStrategy, computerStrategy, playerHistory, computerHistory)
             leftHandWeapon.value = leftWeapon
             rightHandWeapon.value = rightWeapon
+            playerHistory.add(leftWeapon)
+            computerHistory.add(rightWeapon)
             updateScoreText()
         }
     }
@@ -122,7 +129,6 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
             TextBox("J1", 50)
         }
 
-        // "O" à 70% en hauteur et proche du bord droit
         Box(
             modifier = Modifier
                 .fillMaxSize()
