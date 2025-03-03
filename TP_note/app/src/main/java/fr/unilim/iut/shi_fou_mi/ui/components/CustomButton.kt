@@ -20,13 +20,14 @@ fun CustomButton(
     padV: Int = 0,
     padH: Int = 0,
     textSize: Int = 16,
-    width: Int? = null
+    width: Int? = null,
+    isDesactivated: Boolean = false
 ) {
     Button(
-        onClick = { onClick() },
+        onClick = { if (!isDesactivated) onClick() },
         border = BorderStroke(1.dp, Color.Black),
         elevation = ButtonDefaults.buttonElevation(defaultElevation = 10.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE8B86A)),
+        colors = ButtonDefaults.buttonColors(containerColor = if (isDesactivated) Color(0xFFE8B86A).copy(alpha = 0.6f) else Color(0xFFE8B86A)),
         contentPadding = PaddingValues(horizontal = padH.dp, vertical = padV.dp),
         modifier = Modifier.then(
             if (width != null) Modifier.width(width.dp) else Modifier
@@ -35,7 +36,7 @@ fun CustomButton(
         Text(
             text = text,
             fontWeight = FontWeight.Bold,
-            color = Color.White,
+            color = if(isDesactivated) Color.White.copy(alpha = 0.7f) else Color.White,
             fontSize = textSize.sp,
         )
     }

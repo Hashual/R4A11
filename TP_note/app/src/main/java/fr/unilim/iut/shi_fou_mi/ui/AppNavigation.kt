@@ -15,6 +15,7 @@ import fr.unilim.iut.shi_fou_mi.logic.strategies.AdaptiveStrategy
 import fr.unilim.iut.shi_fou_mi.logic.strategies.ComputerStrategy
 import fr.unilim.iut.shi_fou_mi.logic.strategies.HumanStrategy
 import fr.unilim.iut.shi_fou_mi.logic.strategies.Strategies
+import fr.unilim.iut.shi_fou_mi.ui.screens.ChooseNameScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.ComputerStrategySelectionScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.GameModeSelectionScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.HomeScreen
@@ -28,7 +29,10 @@ fun AppNavigation() {
 
     NavHost(navController = navController, startDestination = "home") {
         composable("home") {
-            HomeScreen { playerName ->
+            HomeScreen (navController)
+        }
+        composable("choosename") {
+            ChooseNameScreen { playerName ->
                 navController.navigate("opponent/$playerName")
             }
         }
