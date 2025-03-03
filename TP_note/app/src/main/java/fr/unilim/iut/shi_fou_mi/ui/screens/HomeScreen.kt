@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import fr.unilim.iut.shi_fou_mi.R
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
 import fr.unilim.iut.shi_fou_mi.ui.components.MainTitle
@@ -26,7 +27,7 @@ val titleFont = FontFamily(
 )
 
 @Composable
-fun HomeScreen(onPlayerNameEntered: (String) -> Unit) {
+fun HomeScreen(navController: NavController) {
     Screen {
         Column(
             modifier = Modifier
@@ -44,7 +45,7 @@ fun HomeScreen(onPlayerNameEntered: (String) -> Unit) {
                 .offset(y = (LocalConfiguration.current.screenHeightDp * 0.6).dp)
         ) {
             CustomButton(
-                onClick = { onPlayerNameEntered("JTest") },
+                onClick = { navController.navigate("choosename") },
                 text = "JOUER",
                 padV = 16,
                 padH = 32,
