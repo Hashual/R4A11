@@ -43,7 +43,7 @@ fun ComputerStrategySelectionScreen(playerName: String, opponent: String, gameMo
                 width = 200,
                 textSize = 24
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(30.dp))
             CustomButton(
                 onClick = { onComputerStrategySelected(Strategies.COMPUTER.toString()) },
                 text = "MACHINE",
@@ -51,7 +51,7 @@ fun ComputerStrategySelectionScreen(playerName: String, opponent: String, gameMo
                 width = 200,
                 textSize = 24
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(30.dp))
             CustomButton(
                 onClick = { onComputerStrategySelected(Strategies.ADAPTIVE.toString()) },
                 text = "ADAPTATIVE",
