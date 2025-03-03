@@ -13,7 +13,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import fr.unilim.iut.shi_fou_mi.logic.Opponents
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomText
@@ -35,7 +34,7 @@ fun OpponentSelectionScreen(playerName: String, onOpponentSelected: (String) -> 
         Column(
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .offset(y = (LocalConfiguration.current.screenHeightDp * 0.6).dp)
+                .offset(y = (LocalConfiguration.current.screenHeightDp * 0.485).dp)
         ) {
             CustomButton(
                 onClick = { onOpponentSelected(Opponents.COMPUTER.toString()) },
@@ -44,14 +43,15 @@ fun OpponentSelectionScreen(playerName: String, onOpponentSelected: (String) -> 
                 width = 200,
                 textSize = 24
             )
-//            Spacer(modifier = Modifier.height(16.dp))
-//            CustomButton(
-//                onClick = { onOpponentSelected(Opponents.PLAYER.toString()) },
-//                text = "JOUEUR",
-//                padV = 16,
-//                width = 200,
-//                textSize = 24
-//            )
+            Spacer(modifier = Modifier.height(30.dp))
+            CustomButton(
+                onClick = { onOpponentSelected(Opponents.PLAYER.toString()) },
+                text = "JOUEUR",
+                padV = 16,
+                width = 200,
+                textSize = 24,
+                isDesactivated = true
+            )
         }
     }
 }

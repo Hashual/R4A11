@@ -13,7 +13,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import fr.unilim.iut.shi_fou_mi.logic.strategies.Strategies
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomText
@@ -44,7 +43,7 @@ fun PlayerStrategySelectionScreen(playerName: String, opponent: String, gameMode
                 width = 200,
                 textSize = 24
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(30.dp))
             CustomButton(
                 onClick = { onPlayerStrategySelected(Strategies.COMPUTER.toString()) },
                 text = "MACHINE",
@@ -52,7 +51,7 @@ fun PlayerStrategySelectionScreen(playerName: String, opponent: String, gameMode
                 width = 200,
                 textSize = 24
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(30.dp))
             CustomButton(
                 onClick = { onPlayerStrategySelected(Strategies.ADAPTIVE.toString()) },
                 text = "ADAPTATIVE",
