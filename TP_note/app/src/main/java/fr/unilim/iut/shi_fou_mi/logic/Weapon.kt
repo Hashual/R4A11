@@ -7,9 +7,19 @@ import kotlin.reflect.KClass
 
 abstract class Weapon {
     abstract fun getDrawableResource(isLeft: Boolean): Int
+    abstract fun copy(): Weapon
 
     fun fightAgainst(other: Weapon): Int {
         return RULES[this::class]?.get(other::class) ?: 0
+    }
+
+    fun getCounterMove(): Weapon {
+        return when (this) {
+            is Rock -> Paper()
+            is Paper -> Cisors()
+            is Cisors -> Rock()
+            else -> this
+        }
     }
 
     companion object {
