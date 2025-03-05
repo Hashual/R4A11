@@ -22,6 +22,8 @@ import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomText
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomTextField
 import fr.unilim.iut.shi_fou_mi.ui.components.Screen
+import fr.unilim.iut.shi_fou_mi.utils.LanguageManager
+import fr.unilim.iut.shi_fou_mi.utils.capitalizeFirstLetter
 
 @Composable
 fun ChooseNameScreen(onPlayerNameEntered: (String) -> Unit) {
@@ -36,7 +38,7 @@ fun ChooseNameScreen(onPlayerNameEntered: (String) -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(80.dp))
-            CustomText("Choisissez votre pseudo (max 7 car.)", 35.sp, TextAlign.Center)
+            CustomText(LanguageManager.getLexicon().choosePseudo, 35.sp, TextAlign.Center)
         }
 
         Column(
@@ -49,7 +51,7 @@ fun ChooseNameScreen(onPlayerNameEntered: (String) -> Unit) {
                 onValueChange = { newText ->
                     playerName = newText
                 },
-                placeholder = "Pseudo [a-Z]",
+                placeholder = "${LanguageManager.getLexicon().pseudo.capitalizeFirstLetter()} [a-Z]",
             )
 
             Spacer(modifier = Modifier.height(50.dp))
@@ -60,7 +62,7 @@ fun ChooseNameScreen(onPlayerNameEntered: (String) -> Unit) {
             ) {
                 CustomButton(
                     onClick = { onPlayerNameEntered(playerName) },
-                    text = "JOUER",
+                    text = LanguageManager.getLexicon().play.uppercase(),
                     padV = 16,
                     padH = 32,
                     textSize = 24,
