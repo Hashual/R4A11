@@ -17,6 +17,7 @@ import fr.unilim.iut.shi_fou_mi.logic.strategies.Strategies
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomText
 import fr.unilim.iut.shi_fou_mi.ui.components.Screen
+import fr.unilim.iut.shi_fou_mi.utils.LanguageManager
 
 @Composable
 fun ComputerStrategySelectionScreen(playerName: String, opponent: String, gameMode: String, playerStrategy: String, onComputerStrategySelected: (String) -> Unit) {
@@ -28,7 +29,7 @@ fun ComputerStrategySelectionScreen(playerName: String, opponent: String, gameMo
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(80.dp))
-            CustomText("Choisissez la stratégie adverse", 35.sp, TextAlign.Center)
+            CustomText(LanguageManager.getLexicon().chooseAdversaryStrategy, 35.sp, TextAlign.Center)
         }
 
         Column(
@@ -38,7 +39,7 @@ fun ComputerStrategySelectionScreen(playerName: String, opponent: String, gameMo
         ) {
             CustomButton(
                 onClick = { onComputerStrategySelected(Strategies.HUMAN.toString()) },
-                text = "HUMAINE",
+                text = LanguageManager.getLexicon().human.uppercase(),
                 padV = 16,
                 width = 200,
                 textSize = 24
@@ -46,7 +47,7 @@ fun ComputerStrategySelectionScreen(playerName: String, opponent: String, gameMo
             Spacer(modifier = Modifier.height(30.dp))
             CustomButton(
                 onClick = { onComputerStrategySelected(Strategies.COMPUTER.toString()) },
-                text = "MACHINE",
+                text = LanguageManager.getLexicon().machine.uppercase(),
                 padV = 16,
                 width = 200,
                 textSize = 24
@@ -54,7 +55,7 @@ fun ComputerStrategySelectionScreen(playerName: String, opponent: String, gameMo
             Spacer(modifier = Modifier.height(30.dp))
             CustomButton(
                 onClick = { onComputerStrategySelected(Strategies.ADAPTIVE.toString()) },
-                text = "ADAPTATIVE",
+                text = LanguageManager.getLexicon().adaptive.uppercase(),
                 padV = 16,
                 width = 200,
                 textSize = 24

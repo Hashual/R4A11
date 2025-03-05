@@ -37,6 +37,8 @@ import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomText
 import fr.unilim.iut.shi_fou_mi.ui.components.Screen
 import fr.unilim.iut.shi_fou_mi.ui.components.TextBox
+import fr.unilim.iut.shi_fou_mi.utils.LanguageManager
+import fr.unilim.iut.shi_fou_mi.utils.capitalizeFirstLetter
 import kotlinx.coroutines.launch
 
 @Composable
@@ -65,11 +67,11 @@ fun PlayScreen(
     fun updateScoreText() {
         if (leftHandWeapon.value.fightAgainst(rightHandWeapon.value) == 1) {
             player.incrementScore()
-            scoreText.value = " ${player.name} gagne !"
+            scoreText.value = " ${player.name} ${LanguageManager.getLexicon().win} !"
         } else if (leftHandWeapon.value.fightAgainst(rightHandWeapon.value) == -1) {
-            scoreText.value = "L'ordinateur gagne !"
+            scoreText.value = "Mr. Robot ${LanguageManager.getLexicon().win} !"
         } else {
-            scoreText.value = "Match nul"
+            scoreText.value = LanguageManager.getLexicon().draw.capitalizeFirstLetter()
         }
     }
 
@@ -161,7 +163,7 @@ fun PlayScreen(
             Spacer(modifier = Modifier.height(32.dp))
             CustomButton(
                 onClick = { navController.navigate("home") },
-                text = "RETOUR",
+                text = LanguageManager.getLexicon().back.uppercase(),
                 padV = 10,
                 width = 100,
                 textSize = 14
@@ -169,7 +171,7 @@ fun PlayScreen(
             Spacer(modifier = Modifier.height(16.dp))
             CustomButton(
                 onClick = { launchRound() },
-                text = "JOUER",
+                text = LanguageManager.getLexicon().play.uppercase(),
                 padV = 10,
                 width = 100,
                 textSize = 14,

@@ -17,6 +17,7 @@ import fr.unilim.iut.shi_fou_mi.logic.games.GamesLogic
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomText
 import fr.unilim.iut.shi_fou_mi.ui.components.Screen
+import fr.unilim.iut.shi_fou_mi.utils.LanguageManager
 
 @Composable
 fun GameModeSelectionScreen(playerName: String, opponent: String, onGameModeSelected: (String) -> Unit) {
@@ -28,7 +29,7 @@ fun GameModeSelectionScreen(playerName: String, opponent: String, onGameModeSele
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(80.dp))
-            CustomText("Choisissez le mode", 35.sp, TextAlign.Center)
+            CustomText(LanguageManager.getLexicon().chooseMode, 35.sp, TextAlign.Center)
         }
 
         Column(
@@ -38,7 +39,7 @@ fun GameModeSelectionScreen(playerName: String, opponent: String, onGameModeSele
         ) {
             CustomButton(
                 onClick = { onGameModeSelected(GamesLogic.CLASSIC.toString()) },
-                text = "CLASSIQUE",
+                text = LanguageManager.getLexicon().classic.uppercase(),
                 padV = 16,
                 width = 200,
                 textSize = 24
@@ -46,7 +47,7 @@ fun GameModeSelectionScreen(playerName: String, opponent: String, onGameModeSele
             Spacer(modifier = Modifier.height(30.dp))
             CustomButton(
                 onClick = { onGameModeSelected(GamesLogic.STRATEGIC.toString()) },
-                text = "STRATEGIQUE",
+                text = LanguageManager.getLexicon().strategic.uppercase(),
                 padV = 16,
                 width = 200,
                 textSize = 24

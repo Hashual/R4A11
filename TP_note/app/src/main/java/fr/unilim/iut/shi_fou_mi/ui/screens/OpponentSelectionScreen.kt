@@ -17,6 +17,7 @@ import fr.unilim.iut.shi_fou_mi.logic.Opponents
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomText
 import fr.unilim.iut.shi_fou_mi.ui.components.Screen
+import fr.unilim.iut.shi_fou_mi.utils.LanguageManager
 
 @Composable
 fun OpponentSelectionScreen(playerName: String, onOpponentSelected: (String) -> Unit) {
@@ -28,7 +29,7 @@ fun OpponentSelectionScreen(playerName: String, onOpponentSelected: (String) -> 
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(80.dp))
-            CustomText("Choisissez votre adversaire", 35.sp, TextAlign.Center)
+            CustomText(LanguageManager.getLexicon().chooseOpponent, 35.sp, TextAlign.Center)
         }
 
         Column(
@@ -38,7 +39,7 @@ fun OpponentSelectionScreen(playerName: String, onOpponentSelected: (String) -> 
         ) {
             CustomButton(
                 onClick = { onOpponentSelected(Opponents.COMPUTER.toString()) },
-                text = "ORDINATEUR",
+                text = LanguageManager.getLexicon().computer.uppercase(),
                 padV = 16,
                 width = 200,
                 textSize = 24
@@ -46,7 +47,7 @@ fun OpponentSelectionScreen(playerName: String, onOpponentSelected: (String) -> 
             Spacer(modifier = Modifier.height(30.dp))
             CustomButton(
                 onClick = { onOpponentSelected(Opponents.PLAYER.toString()) },
-                text = "JOUEUR",
+                text = LanguageManager.getLexicon().player.uppercase(),
                 padV = 16,
                 width = 200,
                 textSize = 24,
