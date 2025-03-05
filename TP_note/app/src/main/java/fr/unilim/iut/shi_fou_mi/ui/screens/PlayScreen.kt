@@ -51,6 +51,7 @@ fun PlayScreen(
 
     val rotation = remember { Animatable(0f) }
     val coroutineScope = rememberCoroutineScope()
+    val isPlayBtnDesactivated = remember { mutableStateOf(false) }
 
     val leftHandWeapon = remember { mutableStateOf<Weapon>(Rock()) }
     val rightHandWeapon = remember { mutableStateOf<Weapon>(Rock()) }
@@ -74,6 +75,7 @@ fun PlayScreen(
 
     fun launchRound() {
         scoreText.value = ""
+        isPlayBtnDesactivated.value = true
         coroutineScope.launch {
             repeat(3) {
                 rotation.animateTo(0f, animationSpec = tween(100))
@@ -86,6 +88,7 @@ fun PlayScreen(
             playerHistory.add(leftWeapon)
             computerHistory.add(rightWeapon)
             updateScoreText()
+            isPlayBtnDesactivated.value = false
         }
     }
 
@@ -169,7 +172,8 @@ fun PlayScreen(
                 text = "JOUER",
                 padV = 10,
                 width = 100,
-                textSize = 14
+                textSize = 14,
+                isDesactivated = isPlayBtnDesactivated.value
             )
         }
     }
