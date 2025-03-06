@@ -26,6 +26,11 @@ class Scores(context: Context) {
             .map { it.key to it.value }
     }
 
+    fun resetScores() {
+        scores.clear()
+        saveScores()
+    }
+
     private fun saveScores() {
         val editor = prefs.edit()
         editor.putString("scores_map", scores.map { "${it.key}:${it.value}" }.joinToString(","))
@@ -47,6 +52,5 @@ class Scores(context: Context) {
             }
         }
     }
-
 }
 

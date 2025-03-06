@@ -18,4 +18,10 @@ data object GermanLexicon : Lexicon() {
     override val machine = "maschine"
     override val adaptive = "adaptiv"
     override val back = "zurück"
+    override val scores = "rangliste"
+    override val victories = "siege"
+    override val confirm = "bestätigen"
+    override val cancel = "stornieren"
+    override val yes = "ja"
+    override val resetscores = "Möchten Sie wirklich die Punkte zurücksetzen?"
 }

@@ -18,4 +18,10 @@ data object EnglishLexicon : Lexicon() {
     override val machine = "machine"
     override val adaptive = "adaptive"
     override val back = "back"
+    override val scores = "ranking"
+    override val victories = "victories"
+    override val confirm = "confirm"
+    override val cancel = "cancel"
+    override val yes = "yes"
+    override val resetscores = "Do you really want to reset the scores?"
 }
