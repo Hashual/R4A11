@@ -76,28 +76,26 @@ fun HomeScreen(navController: NavController) {
         Column(
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .offset(y = (LocalConfiguration.current.screenHeightDp * 0.6).dp)
+                .offset(y = (LocalConfiguration.current.screenHeightDp * 0.485).dp)
         ) {
             CustomButton(
                 onClick = { navController.navigate("choosename") },
                 text = LanguageManager.getLexicon().play.uppercase(),
                 padV = 16,
-                padH = 32,
-                textSize = 24
+                textSize = 24,
+                width = 200
             )
-            Spacer(modifier = Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(30.dp))
             CustomButton(
                 onClick = { navController.navigate("scores") },
-                text = LanguageManager.getLexicon().win.uppercase(),
+                text = LanguageManager.getLexicon().scores.uppercase(),
                 padV = 16,
-                padH = 32,
-                textSize = 24
+                textSize = 24,
+                width = 200
             )
         }
     }
 }
-
-//TODO() : faire choisir son pseudo au joueur max 7 lettres et faire aussi le read me analyse strat
 
 
 

@@ -18,4 +18,10 @@ data object SpanishLexicon : Lexicon() {
     override val machine = "máquina"
     override val adaptive = "adaptativo"
     override val back = "volver"
+    override val scores = "clasificación"
+    override val victories = "victorias"
+    override val confirm = "confirmar"
+    override val cancel = "cancelar"
+    override val yes = "sí"
+    override val resetscores = "¿Realmente quieres restablecer los puntajes?"
 }
