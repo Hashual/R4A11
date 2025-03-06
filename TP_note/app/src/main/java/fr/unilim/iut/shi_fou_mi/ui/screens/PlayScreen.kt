@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import fr.unilim.iut.shi_fou_mi.logic.GameLogic
-import fr.unilim.iut.shi_fou_mi.logic.Player
+import fr.unilim.iut.shi_fou_mi.logic.Scores
 import fr.unilim.iut.shi_fou_mi.logic.Strategy
 import fr.unilim.iut.shi_fou_mi.logic.Weapon
 import fr.unilim.iut.shi_fou_mi.logic.weapons.Rock
@@ -45,7 +45,7 @@ import kotlinx.coroutines.launch
 fun PlayScreen(
     navController: NavController,
     gameLogic: GameLogic,
-    player: Player,
+    player: String,
     playerStrategy: Strategy? = null,
     computerStrategy: Strategy? = null
 ) {
@@ -61,13 +61,13 @@ fun PlayScreen(
     val playerHistory = mutableListOf<Weapon>()
     val computerHistory = mutableListOf<Weapon>()
 
-
+    val scores = Scores(LocalContext.current)
     val scoreText = remember { mutableStateOf("") }
 
     fun updateScoreText() {
         if (leftHandWeapon.value.fightAgainst(rightHandWeapon.value) == 1) {
-            player.incrementScore()
-            scoreText.value = " ${player.name} ${LanguageManager.getLexicon().win} !"
+            scores.updateScore(player)
+            scoreText.value = " $player ${LanguageManager.getLexicon().win} !"
         } else if (leftHandWeapon.value.fightAgainst(rightHandWeapon.value) == -1) {
             scoreText.value = "Mr. Robot ${LanguageManager.getLexicon().win} !"
         } else {
