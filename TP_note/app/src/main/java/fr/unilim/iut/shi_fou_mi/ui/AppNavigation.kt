@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import fr.unilim.iut.shi_fou_mi.logic.Player
 import fr.unilim.iut.shi_fou_mi.logic.games.ClassicGameLogic
 import fr.unilim.iut.shi_fou_mi.logic.games.GamesLogic
 import fr.unilim.iut.shi_fou_mi.logic.games.StrategicGameLogic
@@ -22,6 +21,7 @@ import fr.unilim.iut.shi_fou_mi.ui.screens.HomeScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.OpponentSelectionScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.PlayScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.PlayerStrategySelectionScreen
+import fr.unilim.iut.shi_fou_mi.ui.screens.ScoresScreen
 
 @Composable
 fun AppNavigation() {
@@ -30,6 +30,9 @@ fun AppNavigation() {
     NavHost(navController = navController, startDestination = "home") {
         composable("home") {
             HomeScreen (navController)
+        }
+        composable("scores") {
+            ScoresScreen (navController)
         }
         composable("choosename") {
             ChooseNameScreen { playerName ->
@@ -105,8 +108,7 @@ fun AppNavigation() {
                 navArgument("computerStrategy") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-
-            val player = Player(backStackEntry.arguments?.getString("playerName") ?: "")
+            val player = backStackEntry.arguments?.getString("playerName") ?: ""
             val gameLogic = remember {
                 when (backStackEntry.arguments?.getString("gameMode") ?: "") {
                     GamesLogic.STRATEGIC.toString() -> StrategicGameLogic()

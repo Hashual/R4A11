@@ -73,7 +73,7 @@ fun HomeScreen(navController: NavController) {
             }
         }
 
-        Box(
+        Column(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .offset(y = (LocalConfiguration.current.screenHeightDp * 0.6).dp)
@@ -81,6 +81,14 @@ fun HomeScreen(navController: NavController) {
             CustomButton(
                 onClick = { navController.navigate("choosename") },
                 text = LanguageManager.getLexicon().play.uppercase(),
+                padV = 16,
+                padH = 32,
+                textSize = 24
+            )
+            Spacer(modifier = Modifier.height(5.dp))
+            CustomButton(
+                onClick = { navController.navigate("scores") },
+                text = LanguageManager.getLexicon().win.uppercase(),
                 padV = 16,
                 padH = 32,
                 textSize = 24
