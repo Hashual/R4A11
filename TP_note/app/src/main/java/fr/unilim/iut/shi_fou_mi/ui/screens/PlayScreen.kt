@@ -64,6 +64,17 @@ fun PlayScreen(
     val scores = Scores(LocalContext.current)
     val scoreText = remember { mutableStateOf("") }
 
+    val topRankedPlayer = remember { scores.getFirstPlayer()?.let { mutableStateOf(it.first) } }
+    val leaderText = remember { mutableStateOf("${topRankedPlayer?.value} est maintenant en tête !") }
+
+    fun updateLeaderText() {
+        val newTopPlayer = scores.getFirstPlayer()?.first
+        if (topRankedPlayer != null && newTopPlayer != null && newTopPlayer != topRankedPlayer.value) {
+            leaderText.value = "$newTopPlayer est maintenant en tête !"
+            topRankedPlayer.value = newTopPlayer
+        }
+    }
+
     fun updateScoreText() {
         if (leftHandWeapon.value.fightAgainst(rightHandWeapon.value) == 1) {
             scores.updateScore(player)
@@ -90,6 +101,7 @@ fun PlayScreen(
             playerHistory.add(leftWeapon)
             computerHistory.add(rightWeapon)
             updateScoreText()
+            updateLeaderText()
             isPlayBtnDesactivated.value = false
         }
     }
@@ -177,6 +189,8 @@ fun PlayScreen(
                 textSize = 14,
                 isDesactivated = isPlayBtnDesactivated.value
             )
+            Spacer(modifier = Modifier.height(16.dp))
+            CustomText(leaderText.value, 20.sp, TextAlign.Center)
         }
     }
 }

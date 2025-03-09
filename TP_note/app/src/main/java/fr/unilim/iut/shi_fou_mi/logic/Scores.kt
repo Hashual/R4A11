@@ -26,6 +26,11 @@ class Scores(context: Context) {
             .map { it.key to it.value }
     }
 
+    fun getFirstPlayer(): Pair<String, Int>? {
+        return scores.maxByOrNull { it.value }?.toPair()
+    }
+
+
     fun resetScores() {
         scores.clear()
         saveScores()
