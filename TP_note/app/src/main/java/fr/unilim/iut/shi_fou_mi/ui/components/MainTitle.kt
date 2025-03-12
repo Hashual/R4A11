@@ -8,7 +8,7 @@ import androidx.compose.ui.unit.sp
 fun MainTitle() {
     CustomText(
         text = "Shake-fou-mi",
-        fontSize = 54.sp,
+        fontSize = 50.sp,
         textAlign = TextAlign.Center
     )
 }
