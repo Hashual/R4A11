@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import fr.unilim.iut.shi_fou_mi.ui.screens.titleFont
 
 @Composable
@@ -42,6 +43,7 @@ fun CustomText(
                     blurRadius = 3f
                 )
             ),
+            letterSpacing = 2.sp,
             textAlign = textAlign,
             color = Color.Transparent
         )
@@ -57,6 +59,7 @@ fun CustomText(
                     blurRadius = 3f
                 )
             ),
+            letterSpacing = 2.sp,
             textAlign = textAlign,
             color = Color(0xFFFFF59D) // Jaune pâle
         )

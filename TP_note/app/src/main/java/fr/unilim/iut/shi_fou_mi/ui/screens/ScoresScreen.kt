@@ -43,12 +43,7 @@ fun ScoresScreen(navController: NavController) {
             CustomText(LanguageManager.getLexicon().scores.capitalizeFirstLetter(), 50.sp, TextAlign.Center)
             Spacer(modifier = Modifier.height(15.dp))
             Scorebaord(top10Players, onClick = { showDialog = true })
-        }
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .offset(y = (LocalConfiguration.current.screenHeightDp * 0.6).dp)
-        ) {
+            Spacer(modifier = Modifier.height(20.dp))
             CustomButton(
                 onClick = { navController.navigate("home") },
                 text = LanguageManager.getLexicon().back.uppercase(),
