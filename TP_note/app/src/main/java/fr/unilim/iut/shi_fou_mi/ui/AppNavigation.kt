@@ -31,6 +31,7 @@ fun AppNavigation() {
         composable("home") {
             HomeScreen (navController)
         }
+
         composable("scores") {
             ScoresScreen (navController)
         }
