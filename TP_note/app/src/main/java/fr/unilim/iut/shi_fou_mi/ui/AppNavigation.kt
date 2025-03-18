@@ -1,5 +1,7 @@
 package fr.unilim.iut.shi_fou_mi.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavType
@@ -7,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import fr.unilim.iut.shi_fou_mi.connectivity.BluetoothGameManager
 import fr.unilim.iut.shi_fou_mi.logic.games.ClassicGameLogic
 import fr.unilim.iut.shi_fou_mi.logic.games.GamesLogic
 import fr.unilim.iut.shi_fou_mi.logic.games.StrategicGameLogic
@@ -24,8 +27,9 @@ import fr.unilim.iut.shi_fou_mi.ui.screens.PlayScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.PlayerStrategySelectionScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.ScoresScreen
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
-fun AppNavigation() {
+fun AppNavigation(bluetoothGameManager: BluetoothGameManager) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "home") {
@@ -47,8 +51,8 @@ fun AppNavigation() {
         ) { backStackEntry ->
             val playerName = backStackEntry.arguments?.getString("playerName") ?: ""
             OpponentSelectionScreen(playerName) { opponent ->
-                println(opponent)
                 if (opponent == "PLAYER") {
+
                     navController.navigate("link/$playerName")
                 } else{
                     navController.navigate("gamemode/$playerName/$opponent")
@@ -63,7 +67,8 @@ fun AppNavigation() {
             )
         ) { backStackEntry ->
             val playerName = backStackEntry.arguments?.getString("playerName") ?: ""
-            LinkScreen (playerName) { opponent ->
+            val devices = bluetoothGameManager.getBluetoothDevices()
+            LinkScreen (playerName, devices) { opponent ->
 
             }
         }
