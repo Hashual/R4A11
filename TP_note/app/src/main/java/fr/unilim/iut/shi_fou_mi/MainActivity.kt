@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -25,35 +26,19 @@ import java.io.IOException
 import java.util.UUID
 
 class MainActivity : ComponentActivity() {
-    override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?,
-        caller: ComponentCaller
-    ) {
-        super.onActivityResult(requestCode, resultCode, data, caller)
-        println("un truc on activtyresult")
-    }
-
+    var bluetoothGameManager: BluetoothGameManager? = null
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val bluetooth = BluetoothGameManager(this.baseContext, this)
+        bluetoothGameManager = bluetoothGameManager ?: BluetoothGameManager(this.baseContext, this)
         enableEdgeToEdge()
         setContent {
             Shi_fou_miTheme {
-                AppNavigation()
+                AppNavigation(bluetoothGameManager!!)
             }
         }
-    }
+        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+        registerReceiver(bluetoothGameManager!!.receiver, filter)    }
 
 
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Shi_fou_miTheme {
-        AppNavigation()
-    }
 }
