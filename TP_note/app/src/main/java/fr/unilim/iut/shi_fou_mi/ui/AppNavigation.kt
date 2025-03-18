@@ -18,6 +18,7 @@ import fr.unilim.iut.shi_fou_mi.ui.screens.ChooseNameScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.ComputerStrategySelectionScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.GameModeSelectionScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.HomeScreen
+import fr.unilim.iut.shi_fou_mi.ui.screens.LinkScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.OpponentSelectionScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.PlayScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.PlayerStrategySelectionScreen
@@ -46,9 +47,27 @@ fun AppNavigation() {
         ) { backStackEntry ->
             val playerName = backStackEntry.arguments?.getString("playerName") ?: ""
             OpponentSelectionScreen(playerName) { opponent ->
-                navController.navigate("gamemode/$playerName/$opponent")
+                println(opponent)
+                if (opponent == "PLAYER") {
+                    navController.navigate("link/$playerName")
+                } else{
+                    navController.navigate("gamemode/$playerName/$opponent")
+                }
             }
         }
+
+        composable(
+            "link/{playerName}",
+            arguments = listOf(
+                navArgument("playerName") { type = NavType.StringType },
+            )
+        ) { backStackEntry ->
+            val playerName = backStackEntry.arguments?.getString("playerName") ?: ""
+            LinkScreen (playerName) { opponent ->
+
+            }
+        }
+
         composable(
             "gamemode/{playerName}/{opponent}",
             arguments = listOf(
@@ -67,6 +86,7 @@ fun AppNavigation() {
                 }
             }
         }
+
         composable(
             "playerstrategy/{playerName}/{opponent}/{gameMode}",
             arguments = listOf(
