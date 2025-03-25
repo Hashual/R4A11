@@ -24,4 +24,5 @@ sealed class Lexicon {
     abstract val cancel: String
     abstract val yes: String
     abstract val resetscores: String
+    abstract val isTopLeadingBoard: String
 }
