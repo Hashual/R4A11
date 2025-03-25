@@ -24,4 +24,5 @@ data object EnglishLexicon : Lexicon() {
     override val cancel = "cancel"
     override val yes = "yes"
     override val resetscores = "Do you really want to reset the scores?"
+    override val isTopLeadingBoard = "{} is now leading the ranking!"
 }
