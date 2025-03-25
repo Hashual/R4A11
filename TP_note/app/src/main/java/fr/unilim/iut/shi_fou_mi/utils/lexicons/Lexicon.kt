@@ -18,4 +18,11 @@ sealed class Lexicon {
     abstract val machine: String
     abstract val adaptive: String
     abstract val back: String
+    abstract val scores: String
+    abstract val victories: String
+    abstract val confirm: String
+    abstract val cancel: String
+    abstract val yes: String
+    abstract val resetscores: String
+    abstract val isTopLeadingBoard: String
 }

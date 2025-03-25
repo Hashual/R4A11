@@ -29,24 +29,28 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import fr.unilim.iut.shi_fou_mi.logic.GameLogic
-import fr.unilim.iut.shi_fou_mi.logic.Player
+import fr.unilim.iut.shi_fou_mi.logic.Scores
 import fr.unilim.iut.shi_fou_mi.logic.Strategy
 import fr.unilim.iut.shi_fou_mi.logic.Weapon
 import fr.unilim.iut.shi_fou_mi.logic.weapons.Rock
 import fr.unilim.iut.shi_fou_mi.sensors.Gyroscope
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomText
+import fr.unilim.iut.shi_fou_mi.ui.components.Fireworks
 import fr.unilim.iut.shi_fou_mi.ui.components.Screen
 import fr.unilim.iut.shi_fou_mi.ui.components.TextBox
 import fr.unilim.iut.shi_fou_mi.utils.LanguageManager
 import fr.unilim.iut.shi_fou_mi.utils.capitalizeFirstLetter
+import fr.unilim.iut.shi_fou_mi.utils.playNewTopPlayerSound
+import fr.unilim.iut.shi_fou_mi.utils.vibrate
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
 fun PlayScreen(
     navController: NavController,
     gameLogic: GameLogic,
-    player: Player,
+    player: String,
     playerStrategy: Strategy? = null,
     computerStrategy: Strategy? = null
 ) {
@@ -62,13 +66,33 @@ fun PlayScreen(
     val playerHistory = mutableListOf<Weapon>()
     val computerHistory = mutableListOf<Weapon>()
 
-
+    val scores = Scores(LocalContext.current)
     val scoreText = remember { mutableStateOf("") }
+
+    val topRankedPlayer = remember { scores.getFirstPlayer()?.let { mutableStateOf(it.first) } }
+    val leaderText = remember { mutableStateOf("") }
+    val showFireworks = remember { mutableStateOf(false) }
+
+    fun updateLeaderText() {
+        val newTopPlayer = scores.getFirstPlayer()?.first
+        if (topRankedPlayer != null && newTopPlayer != null && newTopPlayer != topRankedPlayer.value) {
+            leaderText.value = LanguageManager.getLexicon().isTopLeadingBoard.replace("{}", newTopPlayer)
+            topRankedPlayer.value = newTopPlayer
+            vibrate(context)
+            playNewTopPlayerSound(context)
+            showFireworks.value = true
+
+            coroutineScope.launch {
+                delay(4000)
+                leaderText.value = ""
+            }
+        }
+    }
 
     fun updateScoreText() {
         if (leftHandWeapon.value.fightAgainst(rightHandWeapon.value) == 1) {
-            player.incrementScore()
-            scoreText.value = " ${player.name} ${LanguageManager.getLexicon().win} !"
+            scores.updateScore(player)
+            scoreText.value = " $player ${LanguageManager.getLexicon().win} !"
         } else if (leftHandWeapon.value.fightAgainst(rightHandWeapon.value) == -1) {
             scoreText.value = "Mr. Robot ${LanguageManager.getLexicon().win} !"
         } else {
@@ -91,6 +115,7 @@ fun PlayScreen(
             playerHistory.add(leftWeapon)
             computerHistory.add(rightWeapon)
             updateScoreText()
+            updateLeaderText()
             isPlayBtnDesactivated.value = false
         }
     }
@@ -107,6 +132,9 @@ fun PlayScreen(
     }
 
     Screen {
+        if (showFireworks.value) {
+            Fireworks(onAnimationEnd = { showFireworks.value = false })
+        }
         Image(
             painter = painterResource(id = leftHandWeapon.value.getDrawableResource(true)),
             contentDescription = "hand left player",
@@ -178,6 +206,8 @@ fun PlayScreen(
                 textSize = 14,
                 isDesactivated = isPlayBtnDesactivated.value
             )
+            Spacer(modifier = Modifier.height(60.dp))
+            CustomText(leaderText.value, 20.sp, TextAlign.Center)
         }
     }
 }
