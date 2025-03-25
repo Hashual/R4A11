@@ -1,0 +1,21 @@
+package fr.unilim.iut.shi_fou_mi.utils.lexicons
+
+data object GermanLexicon : Lexicon() {
+    override val win = "gewinnt"
+    override val draw = "unentschieden"
+    override val play = "spielen"
+    override val pseudo = "spitzname"
+    override val choosePseudo = "Wählen Sie Ihren Benutzernamen (max. 7 Zeichen)"
+    override val chooseOpponent = "Wählen Sie Ihren Gegner"
+    override val computer = "computer"
+    override val player = "spieler"
+    override val chooseMode = "Wählen Sie den Modus"
+    override val classic = "klassisch"
+    override val strategic = "strategisch"
+    override val chooseAdversaryStrategy = "Wählen Sie die Strategie des Gegners"
+    override val chooseYourStrategy = "Wählen Sie Ihre Strategie"
+    override val human = "menschlich"
+    override val machine = "maschine"
+    override val adaptive = "adaptiv"
+    override val back = "zurück"
+}

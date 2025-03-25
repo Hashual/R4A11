@@ -21,7 +21,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -29,58 +28,70 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import fr.unilim.iut.shi_fou_mi.R
 import fr.unilim.iut.shi_fou_mi.logic.GameLogic
-import fr.unilim.iut.shi_fou_mi.logic.GameMode
+import fr.unilim.iut.shi_fou_mi.logic.Player
+import fr.unilim.iut.shi_fou_mi.logic.Strategy
 import fr.unilim.iut.shi_fou_mi.logic.Weapon
-import fr.unilim.iut.shi_fou_mi.logic.games.ClassicGameLogic
 import fr.unilim.iut.shi_fou_mi.logic.weapons.Rock
 import fr.unilim.iut.shi_fou_mi.sensors.Gyroscope
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomButton
 import fr.unilim.iut.shi_fou_mi.ui.components.CustomText
+import fr.unilim.iut.shi_fou_mi.ui.components.Screen
 import fr.unilim.iut.shi_fou_mi.ui.components.TextBox
+import fr.unilim.iut.shi_fou_mi.utils.LanguageManager
+import fr.unilim.iut.shi_fou_mi.utils.capitalizeFirstLetter
 import kotlinx.coroutines.launch
 
 @Composable
-fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) {
+fun PlayScreen(
+    navController: NavController,
+    gameLogic: GameLogic,
+    player: Player,
+    playerStrategy: Strategy? = null,
+    computerStrategy: Strategy? = null
+) {
     val context = LocalContext.current
 
     val rotation = remember { Animatable(0f) }
     val coroutineScope = rememberCoroutineScope()
+    val isPlayBtnDesactivated = remember { mutableStateOf(false) }
 
     val leftHandWeapon = remember { mutableStateOf<Weapon>(Rock()) }
     val rightHandWeapon = remember { mutableStateOf<Weapon>(Rock()) }
 
-    val scoreText = remember { mutableStateOf("") }
+    val playerHistory = mutableListOf<Weapon>()
+    val computerHistory = mutableListOf<Weapon>()
 
-    val gameLogic: GameLogic = remember(mode) {
-        when (mode) {
-            GameMode.CLASSIC -> ClassicGameLogic()
-        }
-    }
+
+    val scoreText = remember { mutableStateOf("") }
 
     fun updateScoreText() {
         if (leftHandWeapon.value.fightAgainst(rightHandWeapon.value) == 1) {
-            scoreText.value = "Le joueur gagne !"
+            player.incrementScore()
+            scoreText.value = " ${player.name} ${LanguageManager.getLexicon().win} !"
         } else if (leftHandWeapon.value.fightAgainst(rightHandWeapon.value) == -1) {
-            scoreText.value = "Le robot gagne !"
+            scoreText.value = "Mr. Robot ${LanguageManager.getLexicon().win} !"
         } else {
-            scoreText.value = "Match nul"
+            scoreText.value = LanguageManager.getLexicon().draw.capitalizeFirstLetter()
         }
     }
 
     fun launchRound() {
         scoreText.value = ""
+        isPlayBtnDesactivated.value = true
         coroutineScope.launch {
             repeat(3) {
                 rotation.animateTo(0f, animationSpec = tween(100))
                 rotation.animateTo(10f, animationSpec = tween(100))
             }
             rotation.animateTo(0f, animationSpec = tween(100))
-            val (leftWeapon, rightWeapon) = gameLogic.launchRound()
+            val (leftWeapon, rightWeapon) = gameLogic.launchRound(playerStrategy, computerStrategy, playerHistory, computerHistory)
             leftHandWeapon.value = leftWeapon
             rightHandWeapon.value = rightWeapon
+            playerHistory.add(leftWeapon)
+            computerHistory.add(rightWeapon)
             updateScoreText()
+            isPlayBtnDesactivated.value = false
         }
     }
 
@@ -95,13 +106,7 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
         onDispose { gyroscope.stop() }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.background_game),
-            contentDescription = "background",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.matchParentSize()
-        )
+    Screen {
         Image(
             painter = painterResource(id = leftHandWeapon.value.getDrawableResource(true)),
             contentDescription = "hand left player",
@@ -109,7 +114,7 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
                 .size(250.dp)
                 .graphicsLayer(rotationZ = -rotation.value)
                 .align(Alignment.BottomStart)
-                .absoluteOffset(x = (-40).dp, y = (-230).dp)
+                .absoluteOffset(x = (-40).dp, y = (-230).dp) ,
         )
         Image(
             painter = painterResource(id = rightHandWeapon.value.getDrawableResource(false)),
@@ -130,7 +135,6 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
             TextBox("J1", 50)
         }
 
-        // "O" à 70% en hauteur et proche du bord droit
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -159,8 +163,8 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
         ) {
             Spacer(modifier = Modifier.height(32.dp))
             CustomButton(
-                onClick = { navController.popBackStack() },
-                text = "RETOUR",
+                onClick = { navController.navigate("home") },
+                text = LanguageManager.getLexicon().back.uppercase(),
                 padV = 10,
                 width = 100,
                 textSize = 14
@@ -168,10 +172,11 @@ fun PlayScreen(navController: NavController, mode: GameMode = GameMode.CLASSIC) 
             Spacer(modifier = Modifier.height(16.dp))
             CustomButton(
                 onClick = { launchRound() },
-                text = "JOUER",
+                text = LanguageManager.getLexicon().play.uppercase(),
                 padV = 10,
                 width = 100,
-                textSize = 14
+                textSize = 14,
+                isDesactivated = isPlayBtnDesactivated.value
             )
         }
     }
