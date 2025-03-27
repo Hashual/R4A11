@@ -24,4 +24,7 @@ data object GermanLexicon : Lexicon() {
     override val cancel = "stornieren"
     override val yes = "ja"
     override val resetscores = "Möchten Sie wirklich die Punkte zurücksetzen?"
+    override val hostGame = "Erstellen"
+    override val joinGame = "Beitreten"
+    override val waitingScreen = "Warten auf einen Gegner"
 }
