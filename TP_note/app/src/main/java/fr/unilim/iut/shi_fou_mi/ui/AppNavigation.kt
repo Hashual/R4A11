@@ -26,6 +26,7 @@ import fr.unilim.iut.shi_fou_mi.ui.screens.OpponentSelectionScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.PlayScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.PlayerStrategySelectionScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.ScoresScreen
+import fr.unilim.iut.shi_fou_mi.ui.screens.WaitingScreen
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -54,7 +55,12 @@ fun AppNavigation(bluetoothGameManager: BluetoothGameManager) {
                 if (opponent == "PLAYER") {
 
                     navController.navigate("link/$playerName")
-                } else{
+                }
+                else if(opponent == "HOST") {
+                    navController.navigate("waitingScreen/$playerName")
+                }
+
+                else{
                     navController.navigate("gamemode/$playerName/$opponent")
                 }
             }
@@ -72,6 +78,17 @@ fun AppNavigation(bluetoothGameManager: BluetoothGameManager) {
 
             }
         }
+
+        composable(
+            "waitingScreen/{playerName}",
+            arguments = listOf(
+                navArgument("playerName") { type = NavType.StringType },
+            )
+        ) { backStackEntry ->
+            val playerName = backStackEntry.arguments?.getString("playerName") ?: ""
+            WaitingScreen(playerName)
+        }
+
 
         composable(
             "gamemode/{playerName}/{opponent}",

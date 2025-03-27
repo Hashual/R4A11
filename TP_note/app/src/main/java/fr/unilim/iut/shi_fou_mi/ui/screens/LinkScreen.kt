@@ -30,8 +30,8 @@ import kotlinx.coroutines.flow.StateFlow
 
 @SuppressLint("MissingPermission")
 @Composable
-fun LinkScreen(playerName: String, devices : StateFlow<List<BluetoothDevice>> , onOpponentSelected: (String) -> Unit) {
-    val test by devices.collectAsState()
+fun LinkScreen(playerName: String, devices : StateFlow<List<BluetoothDevice>> , onOpponentSelected: (BluetoothDevice) -> Unit) {
+    val device by devices.collectAsState()
     Screen {
         Column(
             modifier = Modifier
@@ -50,9 +50,9 @@ fun LinkScreen(playerName: String, devices : StateFlow<List<BluetoothDevice>> , 
                 .size(400.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            test.forEach {
+            device.forEach {
                 CustomButton(
-                    onClick = { onOpponentSelected(it.name) },
+                    onClick = { onOpponentSelected(it) },
                     text = it.name,
                     padV = 16,
                     width = 200,

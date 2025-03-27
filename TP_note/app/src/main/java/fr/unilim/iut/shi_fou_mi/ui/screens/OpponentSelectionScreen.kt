@@ -47,7 +47,16 @@ fun OpponentSelectionScreen(playerName: String, onOpponentSelected: (String) -> 
             Spacer(modifier = Modifier.height(30.dp))
             CustomButton(
                 onClick = { onOpponentSelected(Opponents.PLAYER.toString()) },
-                text = LanguageManager.getLexicon().player.uppercase(),
+                text = LanguageManager.getLexicon().joinGame.uppercase(),
+                padV = 16,
+                width = 200,
+                textSize = 24,
+                isDesactivated = false
+            )
+            Spacer(modifier = Modifier.height(30.dp))
+            CustomButton(
+                onClick = { onOpponentSelected(Opponents.HOST.toString()) },
+                text = LanguageManager.getLexicon().hostGame.uppercase(),
                 padV = 16,
                 width = 200,
                 textSize = 24,
