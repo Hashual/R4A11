@@ -45,7 +45,7 @@ class BluetoothGameManager (context: Context, activity : Activity) {
     fun checkMultiplePermissions(
         activity: Activity,
         permissions: Array<String>,
-        onPermissionsGranted: () -> Unit
+        onPermissionsGranted: () -> Unit = {}
     ) {
         val permissionsToRequest = permissions.filter {
             ContextCompat.checkSelfPermission(activity, it) != PackageManager.PERMISSION_GRANTED
@@ -78,17 +78,8 @@ class BluetoothGameManager (context: Context, activity : Activity) {
                 Manifest.permission.BLUETOOTH_SCAN,
                 Manifest.permission.BLUETOOTH_ADMIN,
                 Manifest.permission.ACCESS_FINE_LOCATION,
-            )){
-                val server = BluetoothServer(bluetoothAdapter!!)
-                server.start()
-                activity.window.decorView.postDelayed({
-                    val bluetoothDevice = bluetoothAdapter.bondedDevices.find { it.name == "hello world" }
-                    if (bluetoothDevice != null) {
-                        val client = BluetoothClient(bluetoothAdapter, bluetoothDevice)
-                        client.start()
-                    }
-                }, 3000)
-            }
+            ))
+
         }
 
 

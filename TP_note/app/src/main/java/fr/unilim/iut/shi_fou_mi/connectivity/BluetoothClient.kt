@@ -13,6 +13,7 @@ import java.util.UUID
 class BluetoothClient(val bluetoothAdapter: BluetoothAdapter, val device: BluetoothDevice) : Thread() {
         val MY_UUID = UUID.fromString("cd398e30-03d6-11f0-9417-bc24113b978d")
 
+
         private val mmSocket: BluetoothSocket? by lazy(LazyThreadSafetyMode.NONE) {
             device.createRfcommSocketToServiceRecord(MY_UUID)
         }
