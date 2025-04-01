@@ -10,8 +10,9 @@ import java.io.IOException
 import java.util.UUID
 
 @SuppressLint("MissingPermission")
-class BluetoothClient(val bluetoothAdapter: BluetoothAdapter, val device: BluetoothDevice) : Thread() {
+class BluetoothClient(val bluetoothAdapter: BluetoothAdapter, val device: BluetoothDevice, var playerName : String) : Thread() {
         val MY_UUID = UUID.fromString("cd398e30-03d6-11f0-9417-bc24113b978d")
+        var transfert: BluetoothTransfert.ConnectedThread? = null
 
 
         private val mmSocket: BluetoothSocket? by lazy(LazyThreadSafetyMode.NONE) {
@@ -24,14 +25,16 @@ class BluetoothClient(val bluetoothAdapter: BluetoothAdapter, val device: Blueto
             mmSocket?.let { socket ->
                 socket.connect()
                 println("Connected to server")
-                val transfert = BluetoothTransfert(Handler(Looper.getMainLooper())).ConnectedThread(socket)
-                transfert.start()
-                transfert.writeString("hello")
+                transfert = BluetoothTransfert(Handler(Looper.getMainLooper())).ConnectedThread(socket)
+                transfert!!.start()
+                sendMessage("name:$playerName")
 //                manageMyConnectedSocket(socket)
             }
         }
+        fun sendMessage (message: String) {
+            transfert?.writeString(message)
+        }
 
-        // Closes the client socket and causes the thread to finish.
         fun cancel() {
             try {
                 mmSocket?.close()
