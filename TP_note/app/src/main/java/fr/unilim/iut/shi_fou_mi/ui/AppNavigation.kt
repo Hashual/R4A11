@@ -15,6 +15,7 @@ import androidx.navigation.navArgument
 import fr.unilim.iut.shi_fou_mi.connectivity.BluetoothClient
 import fr.unilim.iut.shi_fou_mi.connectivity.BluetoothGameManager
 import fr.unilim.iut.shi_fou_mi.connectivity.BluetoothServer
+import fr.unilim.iut.shi_fou_mi.logic.Weapon
 import fr.unilim.iut.shi_fou_mi.logic.games.ClassicGameLogic
 import fr.unilim.iut.shi_fou_mi.logic.games.GamesLogic
 import fr.unilim.iut.shi_fou_mi.logic.games.StrategicGameLogic
@@ -22,8 +23,8 @@ import fr.unilim.iut.shi_fou_mi.logic.strategies.AdaptiveStrategy
 import fr.unilim.iut.shi_fou_mi.logic.strategies.ComputerStrategy
 import fr.unilim.iut.shi_fou_mi.logic.strategies.HumanStrategy
 import fr.unilim.iut.shi_fou_mi.logic.strategies.Strategies
+import fr.unilim.iut.shi_fou_mi.logic.weapons.WeaponRepository
 import fr.unilim.iut.shi_fou_mi.ui.screens.ChooseNameScreen
-import fr.unilim.iut.shi_fou_mi.ui.screens.ChooseWeaponClassScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.ComputerStrategySelectionScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.GameModeSelectionScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.HomeScreen
@@ -40,8 +41,28 @@ fun AppNavigation(bluetoothGameManager: BluetoothGameManager) {
     val navController = rememberNavController()
     var bluetoothServer by remember { mutableStateOf<BluetoothServer?>(null) }
     var bluetoothClient by remember { mutableStateOf<BluetoothClient?>(null) }
+    var opponentWeapon by remember { mutableStateOf<Weapon?>(null) }
+
+
 
     NavHost(navController = navController, startDestination = "home") {
+        fun onReceivedMessage(playerName: String, message: String) {
+            println("Received message: $message")
+            if (message.startsWith("name:")) {
+                val oppenentName = message.substringAfter("name:")
+
+                navController.navigate("multiplayer/$playerName/$oppenentName")
+            }
+            else if (message.startsWith("weapon:")) {
+                val weapon = message.substringAfter("weapon:")
+                for (wep in WeaponRepository.weapons){
+                    if (weapon == weapon::class.simpleName.toString()){
+                        opponentWeapon = wep
+                    }
+                }
+            }
+        }
+
         composable("home") {
             HomeScreen(navController)
         }
@@ -80,7 +101,10 @@ fun AppNavigation(bluetoothGameManager: BluetoothGameManager) {
             val playerName = backStackEntry.arguments?.getString("playerName") ?: ""
             val devices = bluetoothGameManager.getBluetoothDevices()
             LinkScreen(playerName, devices) { opponent ->
-                bluetoothClient = BluetoothClient(bluetoothGameManager.bluetoothAdapter!!, opponent)
+                bluetoothClient =
+                    BluetoothClient(bluetoothGameManager.bluetoothAdapter!!, opponent, playerName) {
+                        onReceivedMessage(playerName, it)
+                    }
                 bluetoothClient!!.start()
             }
         }
@@ -94,11 +118,14 @@ fun AppNavigation(bluetoothGameManager: BluetoothGameManager) {
             val playerName = backStackEntry.arguments?.getString("playerName") ?: ""
             if (bluetoothServer == null) {
 
-                bluetoothServer = BluetoothServer(bluetoothGameManager.bluetoothAdapter!!)
+                bluetoothServer =
+                    BluetoothServer(bluetoothGameManager.bluetoothAdapter!!, playerName) {
+                        onReceivedMessage(playerName, it)
+                    }
                 bluetoothServer!!.start()
 
             }
-            WaitingScreen(playerName)
+            WaitingScreen()
         }
 
 
@@ -197,6 +224,14 @@ fun AppNavigation(bluetoothGameManager: BluetoothGameManager) {
                 playerStrategy = playerStrategy,
                 computerStrategy = computerStrategy
             )
+
         }
+        composable("multiplayer/{playerName}/{opponentName}"){ backStackEntry ->
+            val playerName = backStackEntry.arguments?.getString("playerName") ?: ""
+            val opponentName = backStackEntry.arguments?.getString("opponentName") ?: ""
+
+            var PlayerWeapon by remember { mutableStateOf<Weapon?>(null) }
+        }
+
     }
 }
