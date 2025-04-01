@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -148,7 +149,8 @@ fun PlayScreen(
         { launchRound() },
         isPlayBtnDesactivated.value,
         scoreText.value,
-        leaderText.value
+        leaderText.value,
+        showFireworks
     )
 }
 
@@ -163,11 +165,13 @@ fun fightScreen(
     onPlayedButtonClicked: () -> Unit,
     playButtonDisaibled: Boolean,
     scoreText: String?,
-    customText: String?
+    customText: String?,
+    showFireworks: MutableState<Boolean>?
+
 ) {
     Screen {
-        if (showFireworks.value) {
-            Fireworks(onAnimationEnd = { showFireworks.value = false })
+        if (showFireworks?.value == true) {
+            Fireworks(onAnimationEnd = { showFireworks?.value = false })
         }
         Image(
             painter = painterResource(id = leftHandWeapon.getDrawableResource(true)),

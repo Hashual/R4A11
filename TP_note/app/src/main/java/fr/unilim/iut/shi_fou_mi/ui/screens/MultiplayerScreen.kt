@@ -70,7 +70,7 @@ fun MultiplayerScreen(
             playButtonDisaibled = false,
             scoreText = scoreText,
             customText = null,
-
+            showFireworks = null
 
         )
     }
