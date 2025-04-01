@@ -23,6 +23,7 @@ import fr.unilim.iut.shi_fou_mi.logic.strategies.ComputerStrategy
 import fr.unilim.iut.shi_fou_mi.logic.strategies.HumanStrategy
 import fr.unilim.iut.shi_fou_mi.logic.strategies.Strategies
 import fr.unilim.iut.shi_fou_mi.ui.screens.ChooseNameScreen
+import fr.unilim.iut.shi_fou_mi.ui.screens.ChooseWeaponClassScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.ComputerStrategySelectionScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.GameModeSelectionScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.HomeScreen

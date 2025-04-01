@@ -12,13 +12,15 @@ import java.io.IOException
 import java.util.UUID
 
 @SuppressLint("MissingPermission")
-class BluetoothServer(bluetoothAdapter: BluetoothAdapter) : Thread(){
+class BluetoothServer(bluetoothAdapter: BluetoothAdapter, val playerName: String) : Thread(){
 
     private val MY_UUID = UUID.fromString("cd398e30-03d6-11f0-9417-bc24113b978d")
     private val NAME = "ShiFouMi"
     private val mmServerSocket: BluetoothServerSocket? by lazy(LazyThreadSafetyMode.NONE) {
         bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord(NAME, MY_UUID)
     }
+    var transfert: BluetoothTransfert.ConnectedThread? = null
+
 
     override fun run() {
         var shouldLoop = true
@@ -36,14 +38,21 @@ class BluetoothServer(bluetoothAdapter: BluetoothAdapter) : Thread(){
                 shouldLoop = false
             }
 
-            BluetoothTransfert(Handler(Looper.getMainLooper(),object:Handler.Callback {
-                override fun handleMessage(msg: android.os.Message): Boolean {
-                    val received = String(msg.obj as ByteArray, Charsets.UTF_8)
-                    println("Received: $received")
-                    return true
-                }
-            })).ConnectedThread(socket!!).start()
+            transfert =
+                BluetoothTransfert(Handler(Looper.getMainLooper(), object : Handler.Callback {
+                    override fun handleMessage(msg: android.os.Message): Boolean {
+                        val received = String(msg.obj as ByteArray, Charsets.UTF_8)
+                        println("Received: $received")
+                        return true
+                    }
+                })).ConnectedThread(socket!!)
+            transfert!!.start()
+            sendMessage("name:$playerName")
+
         }
+    }
+    fun sendMessage (message: String) {
+        transfert?.writeString(message)
     }
 
     fun cancel() {
