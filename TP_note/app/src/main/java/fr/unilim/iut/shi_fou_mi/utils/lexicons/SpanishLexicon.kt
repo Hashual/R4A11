@@ -24,5 +24,8 @@ data object SpanishLexicon : Lexicon() {
     override val cancel = "cancelar"
     override val yes = "sí"
     override val resetscores = "¿Realmente quieres restablecer los puntajes?"
+    override val hostGame = "Crear"
+    override val joinGame = "Unirse"
+    override val waitingScreen = "Esperando un oponente"
     override val isTopLeadingBoard = "¡{} está en la cima del ranking!"
 }

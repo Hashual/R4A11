@@ -24,5 +24,8 @@ data object EnglishLexicon : Lexicon() {
     override val cancel = "cancel"
     override val yes = "yes"
     override val resetscores = "Do you really want to reset the scores?"
+    override val hostGame = "Create"
+    override val joinGame = "Join"
+    override val waitingScreen = "Waiting for an opponent "
     override val isTopLeadingBoard = "{} is now leading the ranking!"
 }
