@@ -1,6 +1,7 @@
 package fr.unilim.iut.shi_fou_mi.ui.screens
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import fr.unilim.iut.shi_fou_mi.logic.GameLogic
+import fr.unilim.iut.shi_fou_mi.logic.Opponents
 import fr.unilim.iut.shi_fou_mi.logic.Scores
 import fr.unilim.iut.shi_fou_mi.logic.Strategy
 import fr.unilim.iut.shi_fou_mi.logic.Weapon
@@ -65,7 +67,8 @@ fun PlayScreen(
     val scoreText = remember { mutableStateOf("") }
 
     val topRankedPlayer = remember { scores.getFirstPlayer()?.let { mutableStateOf(it.first) } }
-    val leaderText = remember { mutableStateOf("${topRankedPlayer?.value} est maintenant en tête !") }
+    val leaderText =
+        remember { mutableStateOf("${topRankedPlayer?.value} est maintenant en tête !") }
 
     fun updateLeaderText() {
         val newTopPlayer = scores.getFirstPlayer()?.first
@@ -95,7 +98,12 @@ fun PlayScreen(
                 rotation.animateTo(10f, animationSpec = tween(100))
             }
             rotation.animateTo(0f, animationSpec = tween(100))
-            val (leftWeapon, rightWeapon) = gameLogic.launchRound(playerStrategy, computerStrategy, playerHistory, computerHistory)
+            val (leftWeapon, rightWeapon) = gameLogic.launchRound(
+                playerStrategy,
+                computerStrategy,
+                playerHistory,
+                computerHistory
+            )
             leftHandWeapon.value = leftWeapon
             rightHandWeapon.value = rightWeapon
             playerHistory.add(leftWeapon)
@@ -117,18 +125,45 @@ fun PlayScreen(
         onDispose { gyroscope.stop() }
     }
 
+    fightScreen(
+        navController,
+        leftHandWeapon.value,
+        rightHandWeapon.value,
+        player,
+        "\uD83E\uDD16",
+        rotation,
+        { launchRound() },
+        isPlayBtnDesactivated.value,
+        scoreText.value,
+        leaderText.value
+    )
+}
+
+@Composable
+fun fightScreen(
+    navController: NavController,
+    leftHandWeapon: Weapon,
+    rightHandWeapon: Weapon,
+    playerName: String,
+    opponentName: String,
+    rotation: Animatable<Float, AnimationVector1D>,
+    onPlayedButtonClicked: () -> Unit,
+    playButtonDisaibled: Boolean,
+    scoreText: String?,
+    customText: String?
+) {
     Screen {
         Image(
-            painter = painterResource(id = leftHandWeapon.value.getDrawableResource(true)),
+            painter = painterResource(id = leftHandWeapon.getDrawableResource(true)),
             contentDescription = "hand left player",
             modifier = Modifier
                 .size(250.dp)
                 .graphicsLayer(rotationZ = -rotation.value)
                 .align(Alignment.BottomStart)
-                .absoluteOffset(x = (-40).dp, y = (-230).dp) ,
+                .absoluteOffset(x = (-40).dp, y = (-230).dp),
         )
         Image(
-            painter = painterResource(id = rightHandWeapon.value.getDrawableResource(false)),
+            painter = painterResource(id = rightHandWeapon.getDrawableResource(false)),
             contentDescription = "hand right player",
             modifier = Modifier
                 .size(250.dp)
@@ -141,27 +176,29 @@ fun PlayScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .wrapContentSize(align = Alignment.BottomStart)
-                .absoluteOffset(x = 25.dp, y= (-210).dp)
+                .absoluteOffset(x = 25.dp, y = (-210).dp)
         ) {
-            TextBox("J1", 50)
+            TextBox(playerName, 50)
         }
 
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .wrapContentSize(align = Alignment.BottomEnd)
-                .absoluteOffset(x = (-20).dp, y= (-210).dp)
+                .absoluteOffset(x = (-20).dp, y = (-210).dp)
         ) {
-            TextBox("\uD83E\uDD16", 50)
+            TextBox(opponentName, 50)
         }
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .wrapContentSize(align = Alignment.TopCenter)
-                .absoluteOffset(y = (0.20f * LocalConfiguration.current.screenHeightDp).dp)
-        ) {
-            CustomText(scoreText.value, 35.sp, TextAlign.Center)
+        if (scoreText != null && scoreText.isNotEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize(align = Alignment.TopCenter)
+                    .absoluteOffset(y = (0.20f * LocalConfiguration.current.screenHeightDp).dp)
+            ) {
+                CustomText(scoreText, 35.sp, TextAlign.Center)
+            }
         }
 
 
@@ -182,15 +219,17 @@ fun PlayScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
             CustomButton(
-                onClick = { launchRound() },
+                onClick = { onPlayedButtonClicked() },
                 text = LanguageManager.getLexicon().play.uppercase(),
                 padV = 10,
                 width = 100,
                 textSize = 14,
-                isDesactivated = isPlayBtnDesactivated.value
+                isDesactivated = playButtonDisaibled
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            CustomText(leaderText.value, 20.sp, TextAlign.Center)
+            if (customText != null) {
+                Spacer(modifier = Modifier.height(16.dp))
+                CustomText(customText, 20.sp, TextAlign.Center)
+            }
         }
     }
 }

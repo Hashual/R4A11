@@ -64,9 +64,14 @@ fun AppNavigation(bluetoothGameManager: BluetoothGameManager) {
                 navController.navigate("multiplayer/$playerName/$oppenentName")
             } else if (message.startsWith("weapon:")) {
                 val weapon = message.substringAfter("weapon:")
-                for (wep in WeaponRepository.weapons) {
-                    if (weapon == wep.javaClass.simpleName) {
-                        opponentWeapon.value = wep
+                if (weapon == "null") {
+                    opponentWeapon.value = null
+                    playerWeapon.value = null
+                } else {
+                    for (wep in WeaponRepository.weapons) {
+                        if (weapon == wep.javaClass.simpleName) {
+                            opponentWeapon.value = wep
+                        }
                     }
                 }
             }
@@ -250,6 +255,7 @@ fun AppNavigation(bluetoothGameManager: BluetoothGameManager) {
             }
 
             MultiplayerScreen(
+                navController,
                 playerWeapon,
                 opponentWeapon,
                 playerName,
