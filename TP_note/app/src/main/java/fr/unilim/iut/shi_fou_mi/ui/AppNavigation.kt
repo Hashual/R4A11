@@ -1,8 +1,10 @@
 package fr.unilim.iut.shi_fou_mi.ui
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,19 +31,27 @@ import fr.unilim.iut.shi_fou_mi.ui.screens.ComputerStrategySelectionScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.GameModeSelectionScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.HomeScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.LinkScreen
+import fr.unilim.iut.shi_fou_mi.ui.screens.MultiplayerScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.OpponentSelectionScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.PlayScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.PlayerStrategySelectionScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.ScoresScreen
 import fr.unilim.iut.shi_fou_mi.ui.screens.WaitingScreen
+import kotlinx.coroutines.flow.MutableStateFlow
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun AppNavigation(bluetoothGameManager: BluetoothGameManager) {
     val navController = rememberNavController()
     var bluetoothServer by remember { mutableStateOf<BluetoothServer?>(null) }
     var bluetoothClient by remember { mutableStateOf<BluetoothClient?>(null) }
-    var opponentWeapon by remember { mutableStateOf<Weapon?>(null) }
+    var opponentWeapon = MutableStateFlow<Weapon?>(null)
+    var playerWeapon = MutableStateFlow<Weapon?>(null)
+    var oldPlayerWeapon by remember { mutableStateOf<Weapon?>(null) }
+
+    val opponentWeaponState = opponentWeapon.collectAsState()
+    val playerWeaponState = playerWeapon.collectAsState()
 
 
 
@@ -52,12 +62,11 @@ fun AppNavigation(bluetoothGameManager: BluetoothGameManager) {
                 val oppenentName = message.substringAfter("name:")
 
                 navController.navigate("multiplayer/$playerName/$oppenentName")
-            }
-            else if (message.startsWith("weapon:")) {
+            } else if (message.startsWith("weapon:")) {
                 val weapon = message.substringAfter("weapon:")
-                for (wep in WeaponRepository.weapons){
-                    if (weapon == weapon::class.simpleName.toString()){
-                        opponentWeapon = wep
+                for (wep in WeaponRepository.weapons) {
+                    if (weapon == wep.javaClass.simpleName) {
+                        opponentWeapon.value = wep
                     }
                 }
             }
@@ -226,11 +235,27 @@ fun AppNavigation(bluetoothGameManager: BluetoothGameManager) {
             )
 
         }
-        composable("multiplayer/{playerName}/{opponentName}"){ backStackEntry ->
+        composable("multiplayer/{playerName}/{opponentName}") { backStackEntry ->
             val playerName = backStackEntry.arguments?.getString("playerName") ?: ""
             val opponentName = backStackEntry.arguments?.getString("opponentName") ?: ""
 
-            var PlayerWeapon by remember { mutableStateOf<Weapon?>(null) }
+            if (playerWeaponState.value != oldPlayerWeapon) {
+                if (bluetoothClient != null) {
+                    bluetoothClient?.sendMessage("weapon:${playerWeaponState.value?.javaClass?.simpleName}")
+                }
+                if (bluetoothServer != null) {
+                    bluetoothServer?.sendMessage("weapon:${playerWeaponState.value?.javaClass?.simpleName}")
+                }
+                oldPlayerWeapon = playerWeapon.value
+            }
+
+            MultiplayerScreen(
+                playerWeapon,
+                opponentWeapon,
+                playerName,
+                opponentName
+            )
+
         }
 
     }
