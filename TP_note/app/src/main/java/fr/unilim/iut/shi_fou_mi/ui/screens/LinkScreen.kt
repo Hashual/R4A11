@@ -48,7 +48,8 @@ fun LinkScreen(playerName: String, devices : StateFlow<List<BluetoothDevice>> , 
                 .align(Alignment.TopCenter)
                 .offset(y = (LocalConfiguration.current.screenHeightDp * 0.485).dp)
                 .size(400.dp)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
         ) {
             device.forEach {
                 CustomButton(
