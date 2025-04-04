@@ -2,6 +2,10 @@
 
 Ce projet implémente trois stratégies pour un jeu de Pierre-Papier-Ciseaux, chacune ayant une approche unique pour déterminer le prochain coup à jouer. Ce README présente une analyse de chaque stratégie, ses choix de conception et justifications, ainsi qu'une comparaison de leurs performances.
 
+## À noter
+En cas de non activation du bluetooth il est possible que l'application plante dès le lancement, veuillez donc l'activer pour profiter pleinement de l'application.
+
+
 ## Stratégies
 
 ### 1. **HumanStrategy**
@@ -58,6 +62,14 @@ Les stratégies sont comparées entre elles dans des simulations de 10 000 round
 **Note** : Ces valeurs sont la moyenne des résultats obtenus sur les 10 000 rounds. Un round correspond à une remise à zéro de l'historique des scores et des coups.
 
 ---
+
+## Mode multijoueur
+
+Pour jouer en multijoueur il est nécéssaire d'avoir le bluetooth d'activé sur l'appareil.
+Une fois le nom du joueur séléctionné un des deux appareils se connecte en tant que "créateur" et l'autre en tant que "joigneur".
+Les deux appareils doivent déjà être appairés manuellement par l'utilisateur via les paramètres du téléphone.
+Si l'appareil n'apparaît pas dans la liste proposé veuillez relancer l'application ou re-appairer le deuxième appareil.
+
 
 ## Conclusion
 
